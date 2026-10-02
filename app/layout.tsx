@@ -7,7 +7,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://docs.lifegui.hengen.com.br'),
+  metadataBase: new URL('https://docs-lifegui.hengen.com.br'),
   title: {
     default: 'lifegui Docs',
     template: '%s | lifegui Docs',

@@ -1,6 +1,6 @@
 # lifegui docs
 
-Source of the documentation site for [lifegui](https://github.com/tabomgui/lifegui), published at **https://docs.lifegui.hengen.com.br**.
+Source of the documentation site for [lifegui](https://github.com/tabomgui/lifegui), published at **https://docs-lifegui.hengen.com.br**.
 
 Built with [Fumadocs](https://fumadocs.dev) on Next.js. The site is available in English and Brazilian Portuguese.
 

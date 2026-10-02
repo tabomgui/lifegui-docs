@@ -1,5 +1,5 @@
 # Docs site. Runs next to the lifegui stack on the same host, on its own port.
-# A tunnel or reverse proxy maps docs.lifegui.hengen.com.br to this port.
+# A tunnel or reverse proxy maps docs-lifegui.hengen.com.br to this port.
 services:
   docs:
     build: .
