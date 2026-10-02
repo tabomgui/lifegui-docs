@@ -33,6 +33,14 @@ docker compose up -d --build
 
 It listens on port `8081` by default (`DOCS_PORT` changes it). Put a TLS-terminating proxy or tunnel in front of it.
 
+`next build` needs more than 1 GB of RAM. On a small host, build the image on another machine and copy it over instead of building in place:
+
+```bash
+docker build --platform linux/amd64 -t lifegui-docs-docs:latest .
+docker save lifegui-docs-docs:latest | gzip | ssh <host> 'gunzip | docker load'
+ssh <host> 'cd ~/lifegui-docs && git pull && docker compose up -d --no-build'
+```
+
 ## License
 
 [AGPL-3.0](https://github.com/tabomgui/lifegui/blob/main/LICENSE), the same as lifegui.
