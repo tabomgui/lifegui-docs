@@ -1,0 +1,150 @@
+---
+title: MCP server
+description: Connect Claude or ChatGPT to lifegui and work with your tasks, habits, notes and calendar in a chat.
+---
+
+lifegui has a built-in [MCP](https://modelcontextprotocol.io) server. Connect an AI assistant to it and ask about your day, capture links, create tasks, check off habits and schedule events in plain language.
+
+The endpoint is `https://life.example.com/mcp`. Assistants sign in with your lifegui account through OAuth. There are no tokens to copy.
+
+## Requirements
+
+- **A public HTTPS URL** for claude.ai and ChatGPT. They connect to lifegui from their own servers, so lifegui must be reachable from the internet over HTTPS. See [HTTPS](/docs/getting-started/https).
+- **Google Calendar connected** for the calendar parts of `meu_dia`, `meus_estudos` and `agendar`. See [Calendar](/docs/features/calendar#connect-your-calendar).
+- **An activated Brain vault** for `meus_estudos`, `buscar_notas` and `capturar`. See [Brain](/docs/features/brain#turn-on-the-brain).
+
+The first-run wizard shows your MCP URL in the **Integrações** (Integrations) step, with a **Copiar** (Copy) button.
+
+## Connect an assistant
+
+<Tabs items={['claude.ai', 'Claude Code', 'ChatGPT']}>
+<Tab value="claude.ai">
+
+1. In claude.ai, open the connector settings and add a custom connector.
+2. Enter a name, for example `lifegui`, and the URL `https://life.example.com/mcp`.
+3. Click connect. claude.ai opens the lifegui authorization page.
+
+The connector also works in the Claude mobile apps once you add it on claude.ai.
+
+</Tab>
+<Tab value="Claude Code">
+
+Run:
+
+```bash
+claude mcp add --transport http lifegui https://life.example.com/mcp
+```
+
+Then start Claude Code, run `/mcp`, and pick `lifegui` to sign in. Claude Code opens the lifegui authorization page in your browser.
+
+</Tab>
+<Tab value="ChatGPT">
+
+1. Turn on developer mode in ChatGPT.
+2. Create a connector with the URL `https://life.example.com/mcp` and OAuth authentication.
+3. ChatGPT opens the lifegui authorization page.
+
+</Tab>
+</Tabs>
+
+## Authorize the connection
+
+The authorization page reads **Autorizar acesso** (Authorize access). It shows the name of the assistant and the account it connects to, under "Conectando como" (Connecting as). The assistant gets access to read and act on your tasks, habits, notes and calendar.
+
+Click **Autorizar** (Authorize) to connect, or **Recusar** (Deny) to cancel.
+
+<Callout type="info">
+  If you are not signed in to lifegui in that browser, the page sends you to the lifegui sign-in screen. Sign in, then start the connection again from the assistant.
+</Callout>
+
+lifegui has no screen that lists connected assistants. To disconnect one, remove the connector in the assistant.
+
+## Tools
+
+The server exposes seven tools. Parameter names are in Portuguese, exactly as the assistant sees them.
+
+<Callout type="info">
+  The server tells the assistant to answer in Portuguese, to use the `America/Sao_Paulo` time zone for all times, and to confirm the title, date and time with you before it calls `agendar`.
+</Callout>
+
+### meu_dia
+
+A summary of one day: overdue tasks and tasks due that day (priority tasks are marked), the day's calendar events, habits with no check-in that day, and the number of captures waiting in the Brain inbox.
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `data` | string | No | Day in `YYYY-MM-DD` format. Defaults to today. |
+
+### meus_estudos
+
+An overview of your studies: note counts per category and status, the titles of notes with status `estudando` and `a-revisar`, this week's progress and the streak of a habit named **Estudar** (Study), and the upcoming calendar events linked to that habit. It takes no parameters.
+
+The habit part needs an active habit named exactly "Estudar" (case does not matter).
+
+### buscar_notas
+
+Searches your Brain notes, or reads one note in full. Pass one of the two parameters.
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `busca` | string | One of the two | Text to find in note titles and content. Returns up to 10 notes, each with its path and an excerpt. |
+| `caminho` | string | One of the two | Path of a note relative to the vault, for example `IA/RAG.md`. Returns the whole note with its frontmatter. |
+
+### capturar
+
+Saves a link or text to the Brain inbox. It works like [mobile capture](/docs/features/mobile-capture).
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `conteudo` | string | Yes | Link or text to save, up to 20,000 characters. |
+| `titulo` | string | No | Title of the capture, up to 150 characters. |
+
+### criar_tarefa
+
+Creates a task in the **A fazer** (To do) column.
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `titulo` | string | Yes | Task title, up to 255 characters. |
+| `prazo` | string | No | Due date in `YYYY-MM-DD` format. |
+| `categoria` | string | No | Name of an existing category. Case does not matter. If no category matches, the tool returns an error with the list of your categories. |
+| `prioridade` | boolean | No | `true` marks the task as a priority. |
+
+### concluir_habito
+
+Marks a habit done for today. It never undoes a check-in: if the habit is already done today, it only says so.
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `nome` | string | Yes | Exact name of an active habit, for example `Leitura`. Case does not matter. If no habit matches, the tool returns an error with the list of your active habits. |
+
+### agendar
+
+Creates an event on your primary Google calendar, either standalone or linked to a task, habit or note.
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `titulo` | string | Yes | Event title, up to 255 characters. |
+| `inicio` | string | Yes | Start time in ISO format, for example `2026-09-25T19:00:00`. Without an offset, it is read as `America/Sao_Paulo` time. |
+| `duracao_minutos` | integer | No | Duration in minutes, from 5 to 1440. Defaults to 60. |
+| `tipo` | string | No | `event` (standalone, the default), `task`, `habit` or `note`. |
+| `ref` | string | When `tipo` is not `event` | ID of the task or habit, or path of the note. |
+| `recorrencia_dias` | array of strings | No | Weekdays for a weekly repeat: `MO`, `TU`, `WE`, `TH`, `FR`, `SA`, `SU`. |
+
+To link an event to a note, the assistant can first find the note path with `buscar_notas`. No tool returns task or habit IDs.
+
+## Example prompts
+
+The assistant picks the tools on its own. You can write in Portuguese or English.
+
+| Prompt | Tool used |
+| --- | --- |
+| "O que eu tenho pra hoje?" (What do I have today?) | `meu_dia` |
+| "Plan my Friday." | `meu_dia` with `data` |
+| "Como estão meus estudos?" (How are my studies going?) | `meus_estudos` |
+| "O que eu anotei sobre RAG?" (What did I write about RAG?) | `buscar_notas` |
+| "Guarda esse link pra eu ler depois: https://example.com/article" (Save this link for later) | `capturar` |
+| "Cria uma tarefa 'Renovar passaporte' pra sexta, categoria Pessoal, prioridade." (Create a task for Friday, category Pessoal, priority) | `criar_tarefa` |
+| "Marquei Leitura hoje." (I did Leitura today.) | `concluir_habito` |
+| "Agenda 1 hora pra estudar a nota sobre RAG amanhã às 19h." (Schedule 1 hour tomorrow at 7 PM to study the RAG note) | `buscar_notas`, then `agendar` |
+| "Block Monday, Wednesday and Friday at 7 AM for a swim, every week." | `agendar` with `recorrencia_dias` |

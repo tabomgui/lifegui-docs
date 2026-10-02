@@ -1,0 +1,48 @@
+---
+title: Backup e restauração
+description: Faça backup do banco, dos vaults, das chaves OAuth do MCP e da configuração, e restaure numa máquina nova.
+---
+
+## O que entra no backup
+
+| Item | O que é |
+| --- | --- |
+| Banco de dados | O banco MySQL `lifegui`: contas, tarefas, hábitos, categorias, configurações e tokens. Ele fica num volume do Docker, por isso é exportado com `mysqldump`. |
+| `vaults/` | Os vaults do Cérebro: uma pasta de notas em Markdown, compatível com o Obsidian, por usuário, em `vaults/{user_id}`. |
+| `oauth-keys/` | As chaves OAuth do servidor MCP. Se elas se perderem, os clientes MCP conectados precisam entrar de novo. |
+| `.env` | Configuração do Docker Compose: a senha do banco e a porta web. |
+| `backend/.env` | Configuração do app: chave do app, URL, cookies, cadastro e credenciais do Google. |
+
+## Fazer o backup
+
+Rode o passo do `tar` com `sudo`. A pasta `oauth-keys/` pertence ao root, porque o `php artisan passport:keys` a cria dentro do container.
+
+```bash
+cd ~/lifegui
+docker compose -f docker-compose.prod.yml exec -T mysql \
+  sh -c 'mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" lifegui' > lifegui.sql
+sudo tar czf lifegui-backup.tgz lifegui.sql vaults oauth-keys .env backend/.env
+```
+
+Isso gera o `lifegui-backup.tgz` no diretório de instalação. Guarde-o num lugar seguro.
+
+## Restaurar
+
+Para restaurar numa máquina nova, extraia o backup num clone novo antes de subir qualquer coisa. Use `sudo` de novo, para que os arquivos restaurados mantenham o dono original.
+
+```bash
+git clone https://github.com/tabomgui/lifegui.git ~/lifegui && cd ~/lifegui
+sudo tar xzf /path/to/lifegui-backup.tgz
+docker compose -f docker-compose.prod.yml up -d --wait mysql
+docker compose -f docker-compose.prod.yml exec -T mysql \
+  sh -c 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" lifegui' < lifegui.sql
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+Esses comandos:
+
+1. Clonam o repositório.
+2. Extraem o dump do banco, os vaults, as chaves OAuth e os arquivos de configuração.
+3. Sobem o MySQL e esperam ele ficar saudável.
+4. Importam o dump do banco.
+5. Compilam e sobem a stack inteira.

@@ -1,0 +1,19 @@
+---
+title: Desinstalação
+description: Remova o lifegui, os containers, as imagens e os dados.
+---
+
+<Callout type="error">
+  Isto apaga todos os dados, incluindo o volume do banco, os vaults e a configuração. Não dá para desfazer. Faça um [backup](/pt-BR/docs/self-hosting/backup) antes se quiser guardar alguma coisa.
+</Callout>
+
+```bash
+cd ~/lifegui
+docker compose -f docker-compose.prod.yml down -v --rmi local
+cd ~ && rm -rf ~/lifegui
+```
+
+- `down -v --rmi local` para e remove os containers, o volume do banco e as imagens compiladas localmente.
+- `rm -rf ~/lifegui` remove o diretório de instalação, com os vaults, as chaves OAuth e os arquivos de configuração.
+
+Se você instalou em outro diretório com `LIFEGUI_DIR`, use esse caminho no lugar de `~/lifegui`.

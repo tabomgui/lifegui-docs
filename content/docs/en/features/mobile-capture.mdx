@@ -1,0 +1,128 @@
+---
+title: Mobile capture
+description: Send links and text from your phone straight to the Brain inbox with a capture token.
+---
+
+Mobile capture sends links and text to the [Brain](/docs/features/brain) inbox from outside the browser. It uses one API endpoint and a token that can only capture. The most common setup is an iOS Shortcut in the share sheet, so you can save a link from Safari or any app in two taps.
+
+## Before you start
+
+- Turn on the **Cérebro** (Brain) module and activate your vault. See [Turn on the Brain](/docs/features/brain#turn-on-the-brain).
+- Make lifegui reachable from your phone. To capture away from home, you need a public URL. Use HTTPS so the token does not travel in clear text. See [HTTPS](/docs/getting-started/https).
+
+## Create a capture token
+
+1. Open **Configurações** (Settings) and find **Captura pelo celular** (Mobile capture). This section only appears when the Brain module is on.
+2. Keep the default name **Atalho iPhone** (iPhone Shortcut) or type another one.
+3. Click **Gerar token** (Generate token).
+4. Click **Copiar** (Copy).
+
+<Callout type="warn">
+  lifegui shows the token only once and stores only its hash. If you lose it, generate a new one.
+</Callout>
+
+The list below the form shows each token with the date it was last used, or "nunca usado" (never used). Click the trash icon to revoke a token. Revoke a token as soon as you no longer use it, for example when you replace a phone.
+
+A capture token can only call the capture endpoint. Any other API call with it returns `403` with the message "Este token só permite capturar no inbox." (This token can only capture to the inbox.)
+
+## The capture endpoint
+
+```http
+POST https://life.example.com/api/brain/inbox
+Authorization: Bearer <token>
+Content-Type: application/json
+Accept: application/json
+
+{"content": "https://example.com/article", "title": "Article to read"}
+```
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `content` | Yes | Link or text to save, up to 65,535 characters. It becomes the body of the capture. |
+| `title` | No | File name of the capture, up to 150 characters. Without it, lifegui names the file `captura-<date>-<time>`. |
+
+lifegui removes characters that file names do not allow from the title, such as `/`, `:`, `#` and brackets. If a capture with the same name exists, lifegui adds the time to the new name instead of overwriting.
+
+A successful call returns `201`:
+
+```json
+{"data": {"path": "00-Inbox/Article to read.md", "title": "Article to read"}}
+```
+
+| Status | Cause |
+| --- | --- |
+| `401` | Missing or invalid token |
+| `403` | The token is used on another endpoint |
+| `422` | `content` is missing, or your vault is not activated |
+
+## Test with curl
+
+```bash
+curl -X POST https://life.example.com/api/brain/inbox \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"content": "https://example.com/article", "title": "Article to read"}'
+```
+
+Open the **Inbox** tab on the Brain page. The capture is there.
+
+## Build an iOS Shortcut
+
+This shortcut appears in the share sheet and sends the shared link or text to your inbox. The action names below are in English, with the Portuguese names in parentheses for an iPhone set to Portuguese.
+
+<Steps>
+<Step>
+
+### Create the shortcut
+
+Open the **Shortcuts** (**Atalhos**) app and tap **+** to create a shortcut. Name it, for example, "Save to lifegui".
+
+</Step>
+<Step>
+
+### Accept input from the share sheet
+
+Open the shortcut details and turn on **Show in Share Sheet** (**Mostrar na Folha de Compartilhamento**). Limit the input types to **URLs** and **Text**.
+
+</Step>
+<Step>
+
+### Add the request
+
+Add the **Get Contents of URL** (**Obter Conteúdo do URL**) action and set it up:
+
+- **URL:** `https://life.example.com/api/brain/inbox`
+- **Method** (**Método**): `POST`
+- **Headers** (**Cabeçalhos**):
+  - `Authorization`: `Bearer <token>`. Keep the space after `Bearer`.
+  - `Accept`: `application/json`
+- **Request Body** (**Corpo da Solicitação**): **JSON**, with one text field:
+  - `content`: the **Shortcut Input** (**Entrada do Atalho**) variable
+
+To set a title, add a second text field named `title`, for example with an **Ask for Input** (**Pedir Entrada**) action before the request.
+
+</Step>
+<Step>
+
+### Confirm the capture (optional)
+
+Add a **Show Notification** (**Mostrar Notificação**) action at the end, for example with the text "Saved to lifegui".
+
+</Step>
+<Step>
+
+### Use it
+
+In Safari or any app, tap **Share** and pick your shortcut. The first time, iOS asks for permission to send data to your lifegui URL. Allow it.
+
+</Step>
+</Steps>
+
+<Callout type="info">
+  The token sits inside the shortcut. Do not share the shortcut with other people. If you do, revoke the token in **Configurações**.
+</Callout>
+
+## Other ways to capture
+
+Any tool that can send an HTTP request can use the same endpoint, such as Android automation apps or a script. To capture from Claude or ChatGPT, use the `capturar` tool of the [MCP server](/docs/features/mcp).

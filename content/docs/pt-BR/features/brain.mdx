@@ -1,0 +1,189 @@
+---
+title: Cérebro
+description: Guarde notas em Markdown puro num vault compatível com o Obsidian, com inbox, wikilinks, backlinks e visão de grafo.
+---
+
+![Página do Cérebro](/screenshots/brain.png)
+
+O módulo **Cérebro** é um segundo cérebro construído sobre um vault do Obsidian. Suas notas são arquivos Markdown com frontmatter YAML, guardados numa pasta no servidor. O lifegui não guarda cópia das notas no banco de dados: os arquivos são a fonte da verdade. Você pode abrir a mesma pasta no Obsidian.
+
+## Ativar o Cérebro
+
+O módulo Cérebro vem desativado.
+
+1. Abra **Configurações** e ative **Cérebro** na lista de módulos.
+2. Abra **Cérebro** na barra lateral.
+3. Se o seu vault ainda não existe, a página mostra "Seu segundo cérebro ainda não existe". Clique em **Ativar Cérebro**.
+
+O lifegui cria o seu vault no servidor. Se você ativar o módulo no assistente de configuração inicial, o lifegui cria o vault na mesma hora.
+
+Cada usuário tem o próprio vault em `<raiz dos vaults>/<id do usuário>`. A raiz vale para a instância inteira. Veja [Configurações](/pt-BR/docs/features/settings#vaults-do-cérebro).
+
+## Estrutura do vault
+
+```text
+<raiz dos vaults>/<id do usuário>/
+├── 00-Inbox/              capturas esperando triagem
+│   ├── processados/       capturas que já viraram nota
+│   └── descartados/       capturas descartadas
+├── <Categoria>/           uma pasta por categoria, com as notas em .md
+├── Templates/             templates de nota opcionais, um por categoria
+├── .lifegui/
+│   └── categories.json    ordem, ícone e cor de cada categoria
+└── .trash/                notas excluídas
+```
+
+O lifegui nunca apaga seus arquivos. Transformar em nota, descartar e excluir movem os arquivos para outra pasta.
+
+## Inbox
+
+A aba **Inbox** junta links e textos para processar depois. O contador da aba mostra quantas capturas estão esperando.
+
+Para capturar pelo navegador, cole um link ou texto na caixa, digite um **Título (opcional)** se quiser e clique em **Capturar**. O lifegui salva a captura como um arquivo Markdown em `00-Inbox/`. Sem título, o nome do arquivo fica `captura-<data>-<hora>`.
+
+Você também pode capturar pelo celular ([Captura pelo celular](/pt-BR/docs/features/mobile-capture)) ou por um assistente de IA ([MCP](/pt-BR/docs/features/mcp)).
+
+Cada captura mostra uma prévia com links clicáveis. Para cada uma, você pode:
+
+- **Virar nota:** escolha a **Categoria**, digite o **Título da nota** e, se quiser, um **Resumo**, e clique em **Criar nota**. O lifegui cria a nota a partir do template da categoria e adiciona o conteúdo capturado embaixo do título `## Minhas anotações`, ou no fim da nota quando o template não tem esse título. A captura original vai para `00-Inbox/processados/`, com a data na frente do nome do arquivo.
+- **Descartar** (ícone de lixeira): move a captura para `00-Inbox/descartados/`, com a data na frente do nome do arquivo.
+
+## Categorias
+
+Cada categoria é uma pasta no vault e uma aba na página do Cérebro. O número em cada aba é a quantidade de notas.
+
+- **Criar:** clique em **Categoria**. Preencha o **Nome**, escolha uma **Cor** e um **Ícone**. O nome não pode ter barras, não pode começar com ponto e não pode ser `00-Inbox` nem `Templates`.
+- **Renomear:** clique no lápis da aba. O lifegui renomeia a pasta, e as notas vão junto. Os vínculos de tarefas e hábitos acompanham a mudança.
+- **Apagar:** clique na lixeira. Só dá para apagar uma categoria vazia.
+- **Reordenar:** arraste a aba para a esquerda ou para a direita.
+
+Pastas criadas no Obsidian aparecem como categorias automaticamente. O lifegui lista essas pastas depois das que você ordenou, em ordem alfabética.
+
+## Notas
+
+Abra a aba de uma categoria para ver as notas dela em cards. Cada card mostra o título, o status, o resumo, as tags e a data em que a nota foi salva. Um ícone de link indica que a nota tem um link de fonte.
+
+Filtre a lista com:
+
+- os chips de status: **Novo**, **Estudando**, **Concluído** e **A revisar**;
+- o menu **Tags**, que lista as tags usadas na categoria;
+- a caixa **Buscar notas…**, que procura no título, no resumo e nas tags.
+
+<Callout type="info">
+  O lifegui lista só os arquivos `.md` que ficam direto na pasta de cada categoria. Notas em subpastas de uma categoria não aparecem.
+</Callout>
+
+### Criar uma nota
+
+Clique em **Nova nota** e preencha:
+
+| Campo | Significado |
+| --- | --- |
+| **Título** | Título da nota. Vira o nome do arquivo. |
+| **Fonte (link, opcional)** | Link de origem, opcional |
+| **Resumo (opcional)** | Resumo, opcional |
+| **Tags (separadas por vírgula, opcional)** | Tags separadas por vírgula, opcional |
+
+Clique em **Criar**. O título precisa ser único na categoria. O lifegui remove caracteres que nomes de arquivo não aceitam, como `/`, `:`, `#` e colchetes.
+
+### Templates e frontmatter
+
+Ao criar uma nota, o lifegui procura `Templates/<Categoria>.md` no seu vault. Crie esse arquivo no Obsidian para dar uma estrutura própria a uma categoria. O template pode usar dois marcadores: `{{title}}` e `{{date}}`.
+
+Sem template, o lifegui usa este:
+
+```markdown
+---
+tipo: nota
+tags: []
+fonte:
+data_salvo: {{date}}
+status: novo
+resumo:
+---
+
+# {{title}}
+
+## Minhas anotações
+```
+
+O lifegui lê e grava estes campos do frontmatter:
+
+| Campo | Significado |
+| --- | --- |
+| `status` | `novo`, `estudando`, `concluido` ou `a-revisar`. Notas novas começam como `novo`. |
+| `tags` | Lista de tags |
+| `fonte` | Link de origem |
+| `resumo` | Resumo |
+| `data_salvo` | Data em que a nota foi salva, `AAAA-MM-DD` |
+
+Qualquer outro campo do frontmatter é mantido como está.
+
+## O painel da nota
+
+Clique no card de uma nota para abrir o painel. O painel mostra o Markdown renderizado e estes controles:
+
+- **Selo de status:** clique para mudar o status. A mudança é salva na hora.
+- **fonte:** abre o link de origem numa nova aba.
+- **Tags:** clique no **X** de uma tag para removê-la. Clique em **Tag** para adicionar. O campo sugere tags já usadas no seu vault. As mudanças são salvas na hora.
+- **Editar** e o ícone de lixeira (excluir).
+
+### Editar uma nota
+
+Clique em **Editar** para abrir o editor. É um editor de Markdown visual, com comandos de barra (`/`), atalhos de Markdown e uma barra de ferramentas no texto selecionado. Ele grava Markdown puro, então o arquivo continua legível no Obsidian.
+
+- Digite `[[` para criar um link para outra nota. O editor sugere títulos de notas enquanto você digita.
+- Clique em **Texto** para editar o Markdown puro. Clique em **Editor** para voltar.
+- Clique em **Salvar** para gravar a nota, ou em **Cancelar** para descartar as mudanças.
+
+### Extrair um trecho para uma nota nova
+
+1. No modo de edição, selecione um trecho.
+2. Clique em **Extrair**.
+3. Escolha a categoria e ajuste o título. O lifegui preenche o título com as primeiras palavras do trecho.
+4. Clique em **Criar**.
+
+O lifegui cria a nota nova com o trecho como conteúdo e troca a seleção por um `[[wikilink]]` para ela. Clique em **Salvar** para gravar o link na nota original.
+
+### Wikilinks e backlinks
+
+Na nota renderizada, os `[[wikilinks]]` funcionam como no Obsidian:
+
+- Um link para uma nota existente abre a nota no painel. O lifegui procura o título em todas as categorias, sem diferenciar maiúsculas.
+- `[[Título|rótulo]]` mostra o rótulo no lugar do título.
+- Um link para uma nota que ainda não existe aparece tracejado. Clique nele para criar a nota.
+
+A seção **Mencionada em** lista as notas que têm link para esta.
+
+### Tarefas e hábitos vinculados
+
+A seção **Vinculado a** lista as tarefas e os hábitos vinculados à nota. Para vincular pelo outro lado, use **Notas do vault** no editor de [tarefa](/pt-BR/docs/features/tasks#notas-do-vault) ou de [hábito](/pt-BR/docs/features/habits#criar-e-editar-hábitos).
+
+Clique em **Criar tarefa** para criar uma tarefa a partir da nota. Ajuste o **Título**, escolha a **Categoria** e um **Prazo** opcional e clique em **Criar e vincular**. Essa opção precisa do módulo Tarefas.
+
+### Agendar uma sessão de estudo
+
+A seção **Agenda** coloca a nota no [Google Calendar](/pt-BR/docs/features/calendar). O título do evento começa como "Estudar: `<título da nota>`".
+
+### Excluir uma nota
+
+Clique na lixeira e confirme. O lifegui move o arquivo para `.trash/` no vault, com a data na frente do nome do arquivo. Você pode restaurá-lo pelo Obsidian. Os vínculos de tarefas e hábitos com a nota são removidos.
+
+## Visão de grafo
+
+Clique no ícone de grafo à direita da barra de abas para ver o grafo. Clique de novo para voltar às notas.
+
+- Cada nota é um ponto com a cor da categoria. Notas com mais conexões ficam maiores.
+- Cada wikilink é uma linha.
+- Um link para uma nota inexistente aparece como um ponto apagado. Clique nele para criar a nota.
+- Clique em uma nota para abri-la no painel.
+- Aproxime o zoom ou passe o mouse sobre um ponto para ver o título.
+- Clique em **# Tags** para incluir as tags no grafo como pontos vazados.
+
+## Usar o vault no Obsidian
+
+O vault é uma pasta comum de arquivos Markdown. Numa instalação padrão com Docker, o seu vault fica na pasta `vaults/<id do usuário>` do diretório de instalação. Abra essa pasta como vault no Obsidian, ou sincronize com uma ferramenta que você já usa. Mudanças feitas no Obsidian aparecem no lifegui no próximo carregamento.
+
+<Callout type="warn">
+  Notas e vínculos são encontrados pelo nome do arquivo. Se você renomear uma nota no Obsidian, os vínculos de tarefas e hábitos com ela quebram. O lifegui marca esses vínculos como "(nota não encontrada)".
+</Callout>

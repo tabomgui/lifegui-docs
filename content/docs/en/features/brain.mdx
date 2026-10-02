@@ -1,0 +1,189 @@
+---
+title: Brain
+description: Keep notes as plain Markdown in an Obsidian-compatible vault, with an inbox, wikilinks, backlinks and a graph view.
+---
+
+![Brain page](/screenshots/brain.png)
+
+The **Cérebro** (Brain) module is a second brain built on an Obsidian vault. Your notes are plain Markdown files with YAML frontmatter, stored in a folder on the server. lifegui keeps no copy of the notes in the database: the files are the source of truth. You can open the same folder in Obsidian.
+
+## Turn on the Brain
+
+The Brain module is off by default.
+
+1. Open **Configurações** (Settings) and turn on **Cérebro** in the module list.
+2. Open **Cérebro** in the sidebar.
+3. If your vault does not exist yet, the page reads "Seu segundo cérebro ainda não existe" (Your second brain does not exist yet). Click **Ativar Cérebro** (Activate Brain).
+
+lifegui creates your vault on the server. If you turn on the module in the first-run wizard, lifegui creates the vault right away.
+
+Each user has their own vault at `<vault root>/<user id>`. The vault root applies to the whole instance. See [Settings](/docs/features/settings#brain-vaults).
+
+## Vault layout
+
+```text
+<vault root>/<user id>/
+├── 00-Inbox/              captures waiting for triage
+│   ├── processados/       captures already turned into notes
+│   └── descartados/       discarded captures
+├── <Category>/            one folder per category, with the notes as .md files
+├── Templates/             optional note templates, one per category
+├── .lifegui/
+│   └── categories.json    tab order, icon and color of each category
+└── .trash/                deleted notes
+```
+
+lifegui never erases your files. Promoting, discarding and deleting move files to another folder.
+
+## Inbox
+
+The **Inbox** tab collects links and text to process later. The counter on the tab shows how many captures are waiting.
+
+To capture from the browser, paste a link or text in the box, optionally type a **Título (opcional)** (Title, optional), and click **Capturar** (Capture). lifegui saves the capture as a Markdown file in `00-Inbox/`. Without a title, the file name is `captura-<date>-<time>`.
+
+You can also capture from your phone ([Mobile capture](/docs/features/mobile-capture)) or from an AI assistant ([MCP](/docs/features/mcp)).
+
+Each capture shows a preview with clickable links. For each one, you can:
+
+- **Virar nota** (Turn into note): pick a **Categoria** (Category), enter a **Título da nota** (Note title) and an optional **Resumo** (Summary), then click **Criar nota** (Create note). lifegui creates the note from the category template and adds the captured content under the `## Minhas anotações` heading, or at the end of the note when the template has no such heading. The original capture moves to `00-Inbox/processados/`, with the date in front of the file name.
+- **Descartar** (Discard, trash icon): moves the capture to `00-Inbox/descartados/`, with the date in front of the file name.
+
+## Categories
+
+Each category is a folder in the vault and a tab on the Brain page. The number on each tab is the note count.
+
+- **Create:** click **Categoria** (Category). Enter a **Nome** (Name), pick a **Cor** (Color) and an **Ícone** (Icon). The name cannot contain slashes, cannot start with a dot, and cannot be `00-Inbox` or `Templates`.
+- **Rename:** click the pencil on the tab. lifegui renames the folder, so the notes move with it. Links from tasks and habits follow the move.
+- **Delete:** click the trash icon. You can only delete an empty category.
+- **Reorder:** drag a tab left or right.
+
+Folders you create in Obsidian show up as categories automatically. lifegui lists them after the ones you ordered, in alphabetical order.
+
+## Notes
+
+Open a category tab to see its notes as cards. Each card shows the title, the status, the summary, the tags and the date the note was saved. A link icon means the note has a source link.
+
+Filter the list with:
+
+- the status chips: **Novo** (New), **Estudando** (Studying), **Concluído** (Done) and **A revisar** (To review);
+- the **Tags** menu, which lists the tags used in the category;
+- the **Buscar notas…** (Search notes) box, which matches the title, the summary and the tags.
+
+<Callout type="info">
+  lifegui lists only the `.md` files directly inside each category folder. Notes in subfolders of a category do not appear.
+</Callout>
+
+### Create a note
+
+Click **Nova nota** (New note) and fill in:
+
+| Field | Meaning |
+| --- | --- |
+| **Título** | Title. It becomes the file name. |
+| **Fonte (link, opcional)** | Source link, optional |
+| **Resumo (opcional)** | Summary, optional |
+| **Tags (separadas por vírgula, opcional)** | Tags separated by commas, optional |
+
+Click **Criar** (Create). The title must be unique in the category. lifegui removes characters that file names do not allow, such as `/`, `:`, `#` and brackets.
+
+### Templates and frontmatter
+
+When you create a note, lifegui looks for `Templates/<Category>.md` in your vault. Create that file in Obsidian to give a category its own structure. The template can use two placeholders: `{{title}}` and `{{date}}`.
+
+Without a template, lifegui uses this one:
+
+```markdown
+---
+tipo: nota
+tags: []
+fonte:
+data_salvo: {{date}}
+status: novo
+resumo:
+---
+
+# {{title}}
+
+## Minhas anotações
+```
+
+lifegui reads and writes these frontmatter fields:
+
+| Field | Meaning |
+| --- | --- |
+| `status` | `novo`, `estudando`, `concluido` or `a-revisar`. New notes start as `novo`. |
+| `tags` | List of tags |
+| `fonte` | Source link |
+| `resumo` | Summary |
+| `data_salvo` | Date the note was saved, `YYYY-MM-DD` |
+
+lifegui keeps any other frontmatter field as it is.
+
+## The note panel
+
+Click a note card to open the note panel. The panel shows the rendered Markdown and these controls:
+
+- **Status pill:** click it to change the status. The change saves immediately.
+- **fonte** (source): opens the source link in a new tab.
+- **Tags:** click the **X** on a tag to remove it. Click **Tag** to add one. The field suggests tags already used in your vault. Changes save immediately.
+- **Editar** (Edit) and the trash icon (delete).
+
+### Edit a note
+
+Click **Editar** (Edit) to open the editor. It is a WYSIWYG Markdown editor with slash commands, Markdown shortcuts and a toolbar on selected text. It saves plain Markdown, so the file stays readable in Obsidian.
+
+- Type `[[` to link another note. The editor suggests note titles as you type.
+- Click **Texto** (Text) to edit the raw Markdown. Click **Editor** to go back.
+- Click **Salvar** (Save) to write the note, or **Cancelar** (Cancel) to discard your changes.
+
+### Extract a passage into a new note
+
+1. In edit mode, select a passage.
+2. Click **Extrair** (Extract).
+3. Pick a category and adjust the title. lifegui prefills the title with the first words of the passage.
+4. Click **Criar** (Create).
+
+lifegui creates the new note with the passage as its content and replaces the selection with a `[[wikilink]]` to it. Click **Salvar** (Save) to keep the link in the original note.
+
+### Wikilinks and backlinks
+
+In the rendered note, `[[wikilinks]]` work like in Obsidian:
+
+- A link to an existing note opens it in the panel. lifegui matches titles across all categories and ignores case.
+- `[[Title|label]]` shows the label instead of the title.
+- A link to a note that does not exist yet shows dashed. Click it to create the note.
+
+The **Mencionada em** (Mentioned in) section lists the notes that link to this one.
+
+### Linked tasks and habits
+
+The **Vinculado a** (Linked to) section lists the tasks and habits linked to the note. To link from the other side, use **Notas do vault** in the [task](/docs/features/tasks#vault-notes) or [habit](/docs/features/habits#create-and-edit-habits) editor.
+
+Click **Criar tarefa** (Create task) to create a task from the note. Adjust the **Título** (Title), pick a **Categoria** (Category) and an optional **Prazo** (Due date), then click **Criar e vincular** (Create and link). This option needs the Tasks module.
+
+### Schedule a study session
+
+The **Agenda** section puts the note on [Google Calendar](/docs/features/calendar). The event title starts as "Estudar: `<note title>`" (Study: note title).
+
+### Delete a note
+
+Click the trash icon and confirm. lifegui moves the file to `.trash/` in the vault, with the date in front of the file name. You can restore it from Obsidian. Links from tasks and habits to the note are removed.
+
+## Graph view
+
+Click the graph icon at the right of the tab bar to switch to the graph view. Click it again to go back to the notes.
+
+- Each note is a dot colored by its category. Notes with more connections are bigger.
+- Each wikilink is a line.
+- A link to a missing note shows as a faded dot. Click it to create the note.
+- Click a note to open it in the panel.
+- Zoom in or hover over a dot to see its title.
+- Click **# Tags** to add the tags to the graph as hollow dots.
+
+## Use the vault in Obsidian
+
+The vault is a regular folder of Markdown files. On a default Docker install, your vault is in the `vaults/<user id>` folder of the installation directory. Open it as a vault in Obsidian, or sync it with a tool you already use. Changes made in Obsidian show up in lifegui on the next load.
+
+<Callout type="warn">
+  Notes and links are found by file name. If you rename a note in Obsidian, links from tasks and habits to it break. lifegui marks them as "(nota não encontrada)" (note not found).
+</Callout>

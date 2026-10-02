@@ -1,0 +1,116 @@
+---
+title: First launch
+description: Create the first account on the setup screen and follow the first-run wizard.
+---
+
+## Create the first account
+
+Open your lifegui URL. While the instance has no users, lifegui sends you to the setup screen at `/setup`, titled **Configurar o lifegui** (Set up lifegui). The account you create here is the main account of the instance.
+
+Fill in the fields:
+
+| Field | Meaning |
+| --- | --- |
+| **Nome** | Name |
+| **Email** | Email |
+| **Senha** | Password, at least 8 characters |
+| **Confirmar senha** | Confirm password |
+
+Click **Criar conta** (Create account). lifegui signs you in and opens the first-run wizard.
+
+The setup screen only works while there are no users. After the first account exists, `/setup` redirects to the login page.
+
+<Callout type="warn">
+  Until the first account exists, anyone who can reach the URL can claim the instance. Create the account right after you install.
+</Callout>
+
+## First-run wizard
+
+![First-run wizard](/screenshots/onboarding.png)
+
+The wizard opens automatically after your first sign-in. Click **Continuar** (Continue) and **Voltar** (Back) to move between steps. Click **Pular configuração** (Skip setup) at any time to close it. Everything you set here can be changed later in **Configurações** (Settings).
+
+<Steps>
+<Step>
+
+### Início (Welcome)
+
+A short welcome with an overview of lifegui.
+
+</Step>
+<Step>
+
+### Módulos (Modules)
+
+Turn each module on or off:
+
+- **Tarefas** (Tasks): on by default.
+- **Hábitos** (Habits): on by default.
+- **Cérebro** (Brain): off by default. Turning it on creates your vault on the server.
+
+</Step>
+<Step>
+
+### Categorias (Categories)
+
+Shown only when **Tarefas** is on. Each category becomes a tab of the task board. Click a suggestion to add it:
+
+- **Trabalho** (Work)
+- **Pessoal** (Personal)
+- **Estudos** (Studies)
+- **Casa** (Home)
+- **Saúde** (Health)
+
+To add your own, type a name in **Outra categoria** (Other category) and click **Adicionar** (Add).
+
+</Step>
+<Step>
+
+### Hábitos (Habits)
+
+Shown only when **Hábitos** is on. Adjust the weekly target (1 to 7 times per week) and click **Adicionar** (Add):
+
+| Habit | Meaning | Default target |
+| --- | --- | --- |
+| **Ler** | Read | 7x per week |
+| **Exercício** | Exercise | 3x per week |
+| **Meditar** | Meditate | 5x per week |
+| **Beber água** | Drink water | 7x per week |
+
+</Step>
+<Step>
+
+### Integrações (Integrations)
+
+Both integrations are optional:
+
+- **Google Calendar**: click **Conectar Google Calendar** (Connect Google Calendar). The button appears only when the instance has Google credentials. See [Google Calendar](/docs/self-hosting/google-calendar).
+- **Assistentes de IA (MCP)** (AI assistants): copy the MCP URL (`https://life.example.com/mcp`) to connect claude.ai, Claude Code or ChatGPT. See [MCP server](/docs/features/mcp).
+
+</Step>
+<Step>
+
+### Pronto (Done)
+
+A summary of the active modules, categories and habits. Click **Começar** (Start) to finish.
+
+</Step>
+</Steps>
+
+### Replay the wizard
+
+To open the wizard again, go to **Configurações** and click **Rever introdução** (Replay introduction) in the **Introdução** (Introduction) section.
+
+## Additional accounts
+
+After the first account, public sign-up is off. To let other people create accounts, set `REGISTRATION_ENABLED=true` in `backend/.env` and restart the backend. See [Configuration](/docs/self-hosting/configuration).
+
+With sign-up on, the login page shows a **Cadastre-se** (Sign up) link to `/register`. With sign-up off, `/register` shows **Cadastro desativado** (Sign-up disabled).
+
+## Google sign-in
+
+When the instance has Google credentials, the login page shows **Entrar com Google** (Sign in with Google).
+
+Google sign-in only works for an email that already has an account, unless `REGISTRATION_ENABLED=true`. If no account matches, lifegui returns to the login page with the message **Esta conta Google não está cadastrada nesta instância.** (This Google account is not registered on this instance.)
+
+To set up Google credentials, see [Google Calendar](/docs/self-hosting/google-calendar).

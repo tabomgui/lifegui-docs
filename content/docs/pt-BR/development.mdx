@@ -1,0 +1,65 @@
+---
+title: Desenvolvimento
+description: Rode o lifegui localmente para desenvolver, carregue dados de demonstração e rode os testes.
+---
+
+## Configurar
+
+Você precisa de Git e de Docker com Compose v2.
+
+```bash
+git clone https://github.com/tabomgui/lifegui.git && cd lifegui
+cp backend/.env.example backend/.env
+docker compose up
+```
+
+| Serviço | URL |
+| --- | --- |
+| Frontend com hot reload | http://localhost:5173 |
+| API | http://localhost:8000 |
+
+O container do backend instala as dependências, gera o `APP_KEY` e roda as migrations. O cadastro fica aberto em desenvolvimento: o `backend/.env.example` define `REGISTRATION_ENABLED=true`.
+
+## Dados de demonstração
+
+Carregue um usuário de demonstração com dados de exemplo:
+
+```bash
+docker compose exec backend php artisan db:seed --class=DemoSeeder
+```
+
+Entre com:
+
+- Email: `demo@lifegui.test`
+- Senha: `demo1234`
+
+## Testes
+
+```bash
+cd backend && php artisan test   # Pest
+cd frontend && npm run build     # typecheck e build
+```
+
+O backend usa Pest. O frontend não tem testes unitários: o `npm run build` roda a checagem de tipos do TypeScript e o build de produção.
+
+## Stack
+
+| Camada | Tecnologia |
+| --- | --- |
+| Backend | Laravel 12 (PHP 8.4), MySQL 8, Sanctum (SPA), Passport e laravel/mcp (MCP), Pest |
+| Frontend | React 19, Vite, TypeScript, Tailwind CSS v4, shadcn/ui, TanStack Query, FullCalendar, Milkdown, lucide-react |
+| Infra | Docker Compose. O nginx serve o SPA e faz proxy de `/api`, `/sanctum`, `/mcp`, `/oauth` e `/.well-known` para a API. |
+
+Todo model de domínio é escopado ao usuário logado. Cada usuário tem um vault do Obsidian em `vaults/{user_id}` no host.
+
+## Estrutura do repositório
+
+```
+backend/    API Laravel (lógica de domínio em app/Support: Calendar, Vault, Reports)
+frontend/   SPA React (páginas, componentes por módulo, hooks do TanStack Query)
+install.sh  Instalador e atualizador de um comando só
+```
+
+## Licença
+
+O lifegui é licenciado sob a [AGPL-3.0](https://github.com/tabomgui/lifegui/blob/main/LICENSE).

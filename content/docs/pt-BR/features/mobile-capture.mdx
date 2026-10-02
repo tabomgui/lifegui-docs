@@ -1,0 +1,128 @@
+---
+title: Captura pelo celular
+description: Mande links e textos do celular direto para o inbox do Cérebro com um token de captura.
+---
+
+A captura pelo celular manda links e textos para o inbox do [Cérebro](/pt-BR/docs/features/brain) de fora do navegador. Ela usa um endpoint da API e um token que só serve para capturar. O uso mais comum é um Atalho do iOS na folha de compartilhamento: você salva um link do Safari ou de qualquer app com dois toques.
+
+## Antes de começar
+
+- Ative o módulo **Cérebro** e o seu vault. Veja [Ativar o Cérebro](/pt-BR/docs/features/brain#ativar-o-cérebro).
+- Deixe o lifegui acessível pelo celular. Para capturar fora de casa, você precisa de uma URL pública. Use HTTPS para o token não trafegar em texto puro. Veja [HTTPS](/pt-BR/docs/getting-started/https).
+
+## Criar um token de captura
+
+1. Abra **Configurações** e encontre **Captura pelo celular**. Essa seção só aparece com o módulo Cérebro ativo.
+2. Mantenha o nome padrão **Atalho iPhone** ou digite outro.
+3. Clique em **Gerar token**.
+4. Clique em **Copiar**.
+
+<Callout type="warn">
+  O lifegui mostra o token uma única vez e guarda só o hash dele. Se você perder o token, gere outro.
+</Callout>
+
+A lista embaixo do formulário mostra cada token com a data do último uso, ou "nunca usado". Clique na lixeira para revogar um token. Revogue os tokens que você não usa mais, por exemplo quando trocar de celular.
+
+Um token de captura só consegue chamar o endpoint de captura. Qualquer outra chamada à API com ele retorna `403` com a mensagem "Este token só permite capturar no inbox."
+
+## O endpoint de captura
+
+```http
+POST https://life.example.com/api/brain/inbox
+Authorization: Bearer <token>
+Content-Type: application/json
+Accept: application/json
+
+{"content": "https://example.com/artigo", "title": "Artigo pra ler"}
+```
+
+| Campo | Obrigatório | Descrição |
+| --- | --- | --- |
+| `content` | Sim | Link ou texto a guardar, até 65.535 caracteres. Vira o corpo da captura. |
+| `title` | Não | Nome do arquivo da captura, até 150 caracteres. Sem ele, o lifegui nomeia o arquivo como `captura-<data>-<hora>`. |
+
+O lifegui remove do título os caracteres que nomes de arquivo não aceitam, como `/`, `:`, `#` e colchetes. Se já existir uma captura com o mesmo nome, o lifegui acrescenta o horário ao nome novo em vez de sobrescrever.
+
+Uma chamada bem-sucedida retorna `201`:
+
+```json
+{"data": {"path": "00-Inbox/Artigo pra ler.md", "title": "Artigo pra ler"}}
+```
+
+| Status | Causa |
+| --- | --- |
+| `401` | Token ausente ou inválido |
+| `403` | O token foi usado em outro endpoint |
+| `422` | Falta o `content`, ou o seu vault não foi ativado |
+
+## Testar com curl
+
+```bash
+curl -X POST https://life.example.com/api/brain/inbox \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"content": "https://example.com/artigo", "title": "Artigo pra ler"}'
+```
+
+Abra a aba **Inbox** na página do Cérebro. A captura está lá.
+
+## Montar um Atalho do iOS
+
+Este atalho aparece na folha de compartilhamento e manda o link ou texto compartilhado para o seu inbox. Os nomes das ações estão em português, com o nome em inglês entre parênteses para iPhones configurados em inglês.
+
+<Steps>
+<Step>
+
+### Criar o atalho
+
+Abra o app **Atalhos** (**Shortcuts**) e toque em **+** para criar um atalho. Dê um nome, por exemplo "Salvar no lifegui".
+
+</Step>
+<Step>
+
+### Receber a entrada da folha de compartilhamento
+
+Abra os detalhes do atalho e ative **Mostrar na Folha de Compartilhamento** (**Show in Share Sheet**). Limite os tipos de entrada a **URLs** e **Texto**.
+
+</Step>
+<Step>
+
+### Adicionar a requisição
+
+Adicione a ação **Obter Conteúdo do URL** (**Get Contents of URL**) e configure:
+
+- **URL:** `https://life.example.com/api/brain/inbox`
+- **Método** (**Method**): `POST`
+- **Cabeçalhos** (**Headers**):
+  - `Authorization`: `Bearer <token>`. Mantenha o espaço depois de `Bearer`.
+  - `Accept`: `application/json`
+- **Corpo da Solicitação** (**Request Body**): **JSON**, com um campo de texto:
+  - `content`: a variável **Entrada do Atalho** (**Shortcut Input**)
+
+Para definir um título, adicione um segundo campo de texto chamado `title`, por exemplo com uma ação **Pedir Entrada** (**Ask for Input**) antes da requisição.
+
+</Step>
+<Step>
+
+### Confirmar a captura (opcional)
+
+Adicione uma ação **Mostrar Notificação** (**Show Notification**) no fim, por exemplo com o texto "Salvo no lifegui".
+
+</Step>
+<Step>
+
+### Usar
+
+No Safari ou em qualquer app, toque em **Compartilhar** e escolha o seu atalho. Na primeira vez, o iOS pede permissão para mandar dados para a URL do lifegui. Permita.
+
+</Step>
+</Steps>
+
+<Callout type="info">
+  O token fica dentro do atalho. Não compartilhe o atalho com outras pessoas. Se compartilhar, revogue o token em **Configurações**.
+</Callout>
+
+## Outras formas de capturar
+
+Qualquer ferramenta que faça uma requisição HTTP pode usar o mesmo endpoint, como apps de automação no Android ou um script. Para capturar pelo Claude ou pelo ChatGPT, use a ferramenta `capturar` do [servidor MCP](/pt-BR/docs/features/mcp).

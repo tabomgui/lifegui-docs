@@ -1,0 +1,150 @@
+---
+title: Servidor MCP
+description: Conecte o Claude ou o ChatGPT ao lifegui e trabalhe com tarefas, hábitos, notas e agenda numa conversa.
+---
+
+O lifegui tem um servidor [MCP](https://modelcontextprotocol.io) embutido. Conecte um assistente de IA a ele e peça um resumo do seu dia, capture links, crie tarefas, marque hábitos e agende eventos em linguagem natural.
+
+O endpoint é `https://life.example.com/mcp`. Os assistentes entram com a sua conta do lifegui via OAuth. Não há token para copiar.
+
+## Requisitos
+
+- **Uma URL pública com HTTPS** para o claude.ai e o ChatGPT. Eles se conectam ao lifegui a partir dos próprios servidores, então o lifegui precisa estar acessível pela internet com HTTPS. Veja [HTTPS](/pt-BR/docs/getting-started/https).
+- **Google Calendar conectado** para a parte de agenda de `meu_dia`, `meus_estudos` e `agendar`. Veja [Agenda](/pt-BR/docs/features/calendar#conectar-sua-agenda).
+- **Vault do Cérebro ativado** para `meus_estudos`, `buscar_notas` e `capturar`. Veja [Cérebro](/pt-BR/docs/features/brain#ativar-o-cérebro).
+
+O assistente de configuração inicial mostra a sua URL do MCP no passo **Integrações**, com um botão **Copiar**.
+
+## Conectar um assistente
+
+<Tabs items={['claude.ai', 'Claude Code', 'ChatGPT']}>
+<Tab value="claude.ai">
+
+1. No claude.ai, abra as configurações de conectores e adicione um conector personalizado.
+2. Informe um nome, por exemplo `lifegui`, e a URL `https://life.example.com/mcp`.
+3. Clique para conectar. O claude.ai abre a página de autorização do lifegui.
+
+Depois de adicionado no claude.ai, o conector também funciona nos apps do Claude para celular.
+
+</Tab>
+<Tab value="Claude Code">
+
+Rode:
+
+```bash
+claude mcp add --transport http lifegui https://life.example.com/mcp
+```
+
+Depois abra o Claude Code, rode `/mcp` e escolha `lifegui` para entrar. O Claude Code abre a página de autorização do lifegui no navegador.
+
+</Tab>
+<Tab value="ChatGPT">
+
+1. Ative o modo desenvolvedor no ChatGPT.
+2. Crie um conector com a URL `https://life.example.com/mcp` e autenticação OAuth.
+3. O ChatGPT abre a página de autorização do lifegui.
+
+</Tab>
+</Tabs>
+
+## Autorizar a conexão
+
+A página de autorização tem o título **Autorizar acesso**. Ela mostra o nome do assistente e a conta que vai ser conectada, em "Conectando como". O assistente ganha acesso para ler e agir sobre suas tarefas, hábitos, notas e agenda.
+
+Clique em **Autorizar** para conectar ou em **Recusar** para cancelar.
+
+<Callout type="info">
+  Se você não estiver logado no lifegui naquele navegador, a página leva você para a tela de login do lifegui. Entre e depois comece a conexão de novo pelo assistente.
+</Callout>
+
+O lifegui não tem uma tela que lista os assistentes conectados. Para desconectar um assistente, remova o conector nele.
+
+## Ferramentas
+
+O servidor oferece sete ferramentas. Os nomes dos parâmetros estão exatamente como o assistente os vê.
+
+<Callout type="info">
+  O servidor orienta o assistente a responder em português, a usar o fuso `America/Sao_Paulo` em todos os horários e a confirmar título, data e hora com você antes de chamar `agendar`.
+</Callout>
+
+### meu_dia
+
+Resumo de um dia: tarefas atrasadas e tarefas com prazo no dia (as prioritárias vêm marcadas), os eventos da agenda no dia, os hábitos sem check-in no dia e a quantidade de capturas esperando no inbox do Cérebro.
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+| --- | --- | --- | --- |
+| `data` | string | Não | Dia no formato `AAAA-MM-DD`. Padrão: hoje. |
+
+### meus_estudos
+
+Panorama dos estudos: quantidade de notas por categoria e status, os títulos das notas com status `estudando` e `a-revisar`, o progresso da semana e a sequência de um hábito chamado **Estudar**, e os próximos eventos da agenda vinculados a esse hábito. Não tem parâmetros.
+
+A parte do hábito precisa de um hábito ativo chamado exatamente "Estudar" (maiúsculas não importam).
+
+### buscar_notas
+
+Busca nas notas do Cérebro ou lê uma nota inteira. Passe um dos dois parâmetros.
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+| --- | --- | --- | --- |
+| `busca` | string | Um dos dois | Texto a procurar nos títulos e no conteúdo das notas. Retorna até 10 notas, cada uma com o caminho e um trecho. |
+| `caminho` | string | Um dos dois | Caminho da nota relativo ao vault, por exemplo `IA/RAG.md`. Retorna a nota inteira com o frontmatter. |
+
+### capturar
+
+Guarda um link ou texto no inbox do Cérebro. Funciona como a [captura pelo celular](/pt-BR/docs/features/mobile-capture).
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+| --- | --- | --- | --- |
+| `conteudo` | string | Sim | Link ou texto a guardar, até 20.000 caracteres. |
+| `titulo` | string | Não | Título da captura, até 150 caracteres. |
+
+### criar_tarefa
+
+Cria uma tarefa na coluna **A fazer**.
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+| --- | --- | --- | --- |
+| `titulo` | string | Sim | Título da tarefa, até 255 caracteres. |
+| `prazo` | string | Não | Prazo no formato `AAAA-MM-DD`. |
+| `categoria` | string | Não | Nome de uma categoria existente. Maiúsculas não importam. Se nenhuma categoria bater, a ferramenta retorna um erro com a lista das suas categorias. |
+| `prioridade` | boolean | Não | `true` marca a tarefa como prioridade. |
+
+### concluir_habito
+
+Marca um hábito como feito hoje. Nunca desfaz um check-in: se o hábito já estava feito hoje, só avisa.
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+| --- | --- | --- | --- |
+| `nome` | string | Sim | Nome exato de um hábito ativo, por exemplo `Leitura`. Maiúsculas não importam. Se nenhum hábito bater, a ferramenta retorna um erro com a lista dos seus hábitos ativos. |
+
+### agendar
+
+Cria um evento na sua agenda principal do Google, avulso ou vinculado a uma tarefa, um hábito ou uma nota.
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+| --- | --- | --- | --- |
+| `titulo` | string | Sim | Título do evento, até 255 caracteres. |
+| `inicio` | string | Sim | Início no formato ISO, por exemplo `2026-09-25T19:00:00`. Sem fuso explícito, vale o horário de `America/Sao_Paulo`. |
+| `duracao_minutos` | integer | Não | Duração em minutos, de 5 a 1440. Padrão: 60. |
+| `tipo` | string | Não | `event` (avulso, o padrão), `task`, `habit` ou `note`. |
+| `ref` | string | Quando `tipo` não é `event` | ID da tarefa ou do hábito, ou caminho da nota. |
+| `recorrencia_dias` | array de strings | Não | Dias da semana para repetir toda semana: `MO`, `TU`, `WE`, `TH`, `FR`, `SA`, `SU`. |
+
+Para vincular um evento a uma nota, o assistente pode achar o caminho da nota antes com `buscar_notas`. Nenhuma ferramenta retorna IDs de tarefas ou hábitos.
+
+## Exemplos de pedidos
+
+O assistente escolhe as ferramentas sozinho. Você pode escrever em português ou em inglês.
+
+| Pedido | Ferramenta usada |
+| --- | --- |
+| "O que eu tenho pra hoje?" | `meu_dia` |
+| "Planeja minha sexta." | `meu_dia` com `data` |
+| "Como estão meus estudos?" | `meus_estudos` |
+| "O que eu anotei sobre RAG?" | `buscar_notas` |
+| "Guarda esse link pra eu ler depois: https://example.com/artigo" | `capturar` |
+| "Cria uma tarefa 'Renovar passaporte' pra sexta, categoria Pessoal, prioridade." | `criar_tarefa` |
+| "Marquei Leitura hoje." | `concluir_habito` |
+| "Agenda 1 hora pra estudar a nota sobre RAG amanhã às 19h." | `buscar_notas` e depois `agendar` |
+| "Bloqueia segunda, quarta e sexta às 7h pra natação, toda semana." | `agendar` com `recorrencia_dias` |

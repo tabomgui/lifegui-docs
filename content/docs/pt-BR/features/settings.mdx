@@ -1,0 +1,87 @@
+---
+title: Configurações
+description: Ative e desative módulos, conecte o Google Calendar, defina a raiz dos vaults, gerencie tokens de captura e reveja a introdução.
+---
+
+Abra **Configurações** no fim da barra lateral. A página tem estas seções, de cima para baixo:
+
+| Seção | Aparece |
+| --- | --- |
+| Módulos | Sempre |
+| **Google Calendar** | Sempre |
+| **Vaults do Cérebro** | Com o módulo Cérebro ativo |
+| **Captura pelo celular** | Com o módulo Cérebro ativo |
+| **Introdução** | Sempre |
+
+## Módulos
+
+A lista do topo diz "Ative quais módulos aparecem na barra lateral". Use a chave de cada módulo:
+
+| Módulo | Padrão | Página |
+| --- | --- | --- |
+| **Tarefas** | Ativo | [Tarefas](/pt-BR/docs/features/tasks) |
+| **Hábitos** | Ativo | [Hábitos](/pt-BR/docs/features/habits) |
+| **Cérebro** | Desativado | [Cérebro](/pt-BR/docs/features/brain) |
+
+Cada usuário ativa e desativa os módulos na própria conta. Desativar um módulo esconde ele da barra lateral e dos dashboards. Seus dados continuam guardados. Se você abrir a página de um módulo desativado, o lifegui leva você para o primeiro módulo ativo, ou para **Configurações** quando todos estão desativados.
+
+A página **Agenda** não é um módulo. Ela está sempre na barra lateral.
+
+<Callout type="info">
+  Ativar o **Cérebro** aqui não cria o seu vault. Abra a página **Cérebro** e clique em **Ativar Cérebro**. O assistente de configuração inicial faz as duas coisas de uma vez.
+</Callout>
+
+## Google Calendar
+
+Esta seção mostra o estado da conexão com a sua agenda:
+
+| Estado | O que aparece |
+| --- | --- |
+| A instância não tem credenciais do Google | "Requer credenciais do Google nesta instância", com o link **Como configurar**. Veja [Configurar o Google Calendar](/pt-BR/docs/self-hosting/google-calendar). |
+| Não conectado | O botão **Conectar Google Calendar**. |
+| Conectado | **Conectado** com a data da conexão e o botão **Desconectar**. |
+
+Veja [Agenda](/pt-BR/docs/features/calendar#conectar-sua-agenda) para os passos da conexão.
+
+## Vaults do Cérebro
+
+A seção **Vaults do Cérebro** define a pasta raiz dos vaults no servidor. O vault de cada usuário é uma subpasta com o ID do usuário: `<raiz>/<id do usuário>`.
+
+<Callout type="warn">
+  A raiz vale para a instância inteira, para todos os usuários. Qualquer usuário logado pode mudá-la.
+</Callout>
+
+- Digite um caminho absoluto que comece com `/` e clique em **Salvar**. O caminho é dentro do contêiner do backend.
+- Deixe o campo vazio e salve para voltar ao padrão. O texto de exemplo do campo mostra o caminho padrão. Numa instalação com Docker, o padrão é `/vaults`, mapeado para a pasta `vaults` do diretório de instalação. Veja [Configuração](/pt-BR/docs/self-hosting/configuration).
+- Mudar a raiz não move os vaults existentes. Mova os arquivos você mesmo.
+
+A linha embaixo do campo mostra o estado do seu vault:
+
+| Mensagem | Significado |
+| --- | --- |
+| **Seu vault:** `<caminho>` | O seu vault existe nesse caminho. |
+| **A raiz existe, mas seu vault (...) ainda não.** | A raiz existe, mas o seu vault não. Ative o vault na página **Cérebro**. |
+| **A raiz** `<caminho>` **não existe no servidor.** | A pasta raiz não existe no servidor. |
+
+## Captura pelo celular
+
+A seção **Captura pelo celular** cria e revoga os tokens que mandam conteúdo do celular para o inbox do Cérebro. Veja [Captura pelo celular](/pt-BR/docs/features/mobile-capture).
+
+## Introdução
+
+Clique em **Rever introdução** para abrir de novo o assistente de configuração inicial. Ele recomeça do primeiro passo. Veja [Primeiro acesso](/pt-BR/docs/getting-started/first-launch#assistente-de-configuração-inicial).
+
+## Tema
+
+O botão no canto superior direito de todas as páginas alterna entre os temas claro e escuro. Até você clicar nele, o lifegui segue o tema do sistema.
+
+## Atalhos de teclado
+
+| Atalho | Onde | Ação |
+| --- | --- | --- |
+| `/` | Página de tarefas | Foca o brain dump |
+| `Ctrl+Enter` ou `Cmd+Enter` | Brain dump | Processa as tarefas |
+
+## Sair
+
+Clique em **Sair** ao lado do seu nome, no fim da barra lateral.

@@ -1,0 +1,60 @@
+---
+title: Configuration
+description: Configure lifegui through backend/.env and restart the backend to apply changes.
+---
+
+The installer writes two configuration files in the installation directory (`~/lifegui` by default):
+
+- `.env`: used by Docker Compose. It holds `DB_PASSWORD` and `LIFEGUI_PORT`, the host port of the web container.
+- `backend/.env`: app settings for the Laravel API.
+
+The installer never overwrites these files. Edit them by hand.
+
+## Apply changes
+
+After you edit `backend/.env`, restart the backend:
+
+```bash
+cd ~/lifegui && docker compose -f docker-compose.prod.yml restart backend
+```
+
+## backend/.env keys
+
+| Key | Default | Description |
+| --- | --- | --- |
+| `APP_URL`, `FRONTEND_URL` | your URL | Must match the address in the browser. |
+| `SESSION_DOMAIN` | host of your URL | Cookie domain. |
+| `SANCTUM_STATEFUL_DOMAINS` | `host[:port]` of your URL | Host the SPA runs on. |
+| `SESSION_SECURE_COOKIE` | `true` for https URLs | Sends cookies only over HTTPS. |
+| `REGISTRATION_ENABLED` | `false` | Allows new sign-ups after the first account. |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | empty | Enable Google sign-in and Calendar. See [Google Calendar](/docs/self-hosting/google-calendar). |
+| `GOOGLE_REDIRECT_URI` | `<your URL>/api/auth/google/callback` | Redirect URI for Google sign-in. |
+| `VAULTS_PATH` | `/vaults` | Root of the Brain vaults inside the container. It maps to `vaults/` in the installation directory. |
+
+<Callout type="info">
+  `DB_PASSWORD` appears in both `.env` and `backend/.env`. The two values must match.
+</Callout>
+
+## Change the URL
+
+To serve lifegui at a different address:
+
+1. In `backend/.env`, update `APP_URL`, `FRONTEND_URL`, `SESSION_DOMAIN`, `SANCTUM_STATEFUL_DOMAINS`, `SESSION_SECURE_COOKIE` and `GOOGLE_REDIRECT_URI`.
+2. Restart the backend:
+
+   ```bash
+   cd ~/lifegui && docker compose -f docker-compose.prod.yml restart backend
+   ```
+
+3. If you use Google sign-in or Calendar, add the new redirect URIs to your OAuth client. See [Google Calendar](/docs/self-hosting/google-calendar).
+
+For example, to move to `https://life.example.com`:
+
+```bash
+APP_URL=https://life.example.com
+FRONTEND_URL=https://life.example.com
+SESSION_DOMAIN=life.example.com
+SANCTUM_STATEFUL_DOMAINS=life.example.com
+SESSION_SECURE_COOKIE=true
+GOOGLE_REDIRECT_URI=https://life.example.com/api/auth/google/callback
+```

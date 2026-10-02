@@ -1,0 +1,129 @@
+---
+title: Tarefas
+description: Capture tarefas em lote, organize por categoria e mova pelo quadro Kanban.
+---
+
+![Quadro de tarefas](/screenshots/tasks.png)
+
+O módulo **Tarefas** é um quadro Kanban com três colunas. Ele é a página inicial do lifegui (`/`) enquanto o módulo estiver ativo. Você pode desativá-lo em [Configurações](/pt-BR/docs/features/settings).
+
+## Brain dump
+
+A caixa de texto no topo da página é o brain dump. Use-a para tirar várias tarefas da cabeça de uma vez.
+
+1. Digite uma tarefa por linha.
+2. Clique em **Processar** ou pressione `Ctrl+Enter` (`Cmd+Enter` no macOS).
+
+Cada linha não vazia vira uma tarefa na coluna **A fazer**. O lifegui remove espaços das pontas e ignora linhas em branco. Você pode enviar até 500 linhas de uma vez.
+
+Se uma aba de categoria estiver aberta, as novas tarefas vão para essa categoria. A dica embaixo da caixa avisa, por exemplo, "novas tarefas irão para Trabalho". Nas abas **Hoje** e **Todas**, as novas tarefas ficam sem categoria.
+
+<Callout type="info">
+  Pressione `/` em qualquer lugar da página para ir direto ao brain dump. O atalho não faz nada enquanto você digita em outro campo.
+</Callout>
+
+## Abas e busca
+
+A barra embaixo do brain dump filtra o quadro:
+
+| Aba | Mostra |
+| --- | --- |
+| **Hoje** | Tarefas abertas com prazo para hoje ou atrasadas. O contador fica vermelho quando é maior que zero. |
+| **Todas** | Todas as tarefas. |
+| Uma aba por categoria | As tarefas daquela categoria. |
+
+Cada aba mostra a quantidade de tarefas. Em telas pequenas, as abas viram um menu suspenso.
+
+A caixa **Buscar tarefas…** filtra a aba atual. Ela procura no título, na descrição e nos títulos das subtarefas, sem diferenciar maiúsculas nem acentos.
+
+## Categorias
+
+As categorias agrupam as tarefas em abas.
+
+- **Criar:** clique em **Categoria** no fim das abas. Preencha o **Nome**, escolha uma **Cor** e um **Ícone** e clique em **Salvar**.
+- **Editar ou apagar:** passe o mouse sobre a aba e clique no lápis ou na lixeira. Ao apagar uma categoria, as tarefas dela continuam no quadro, sem categoria.
+- **Reordenar:** arraste a aba para a esquerda ou para a direita.
+- **Mover uma tarefa para uma categoria:** arraste o card da tarefa e solte sobre a aba da categoria.
+
+Em telas pequenas, use o menu suspenso: ele tem **Nova categoria** e, para a categoria selecionada, **Editar** e **Apagar**.
+
+## O quadro
+
+O quadro tem três colunas: **A fazer**, **Fazendo** e **Feito**. Para mudar o status de uma tarefa:
+
+- arraste o card para outra coluna, ou
+- use os botões de seta do card: **Mover para Fazendo**, **Mover para Feito** ou de volta para **A fazer**.
+
+Mover uma tarefa para **Feito** registra a data de conclusão. Os [dashboards](/pt-BR/docs/features/dashboards) usam essa data. Tarefas feitas aparecem com o título riscado.
+
+Em telas pequenas, deslize para os lados para trocar de coluna. Os pontos embaixo do quadro indicam a coluna atual.
+
+## Cards de tarefa
+
+Cada card mostra o título e, quando houver, o selo de prazo e o progresso das subtarefas (por exemplo `2/5`) com as três primeiras subtarefas. Passe o mouse sobre o card para ver os controles:
+
+- **Estrela:** marca a tarefa como prioridade. Tarefas prioritárias sobem para o topo da coluna e ganham uma borda âmbar à esquerda.
+- **Prazo:** abre um seletor com **Hoje**, **Amanhã**, **Próx. semana** e um campo de data. Clique no calendário riscado para remover o prazo.
+- **Menu de categoria:** move a tarefa para outra categoria ou para **Sem categoria**.
+- **Lápis:** abre o editor da tarefa. Clicar em qualquer outro ponto do card faz o mesmo.
+- **Lixeira:** apaga a tarefa.
+
+O selo de prazo muda conforme o tempo restante:
+
+| Selo | Significado |
+| --- | --- |
+| **atrasada 3d** | Atrasada há 3 dias (vermelho) |
+| **hoje** | Vence hoje |
+| **amanhã** | Vence amanhã |
+| **em 5d** | Vence em 5 dias (até 7) |
+| **12/10** | Vence depois, mostrado como dia/mês |
+
+## Editar uma tarefa
+
+O diálogo **Editar tarefa** tem estes campos:
+
+| Campo | Significado |
+| --- | --- |
+| **Título** | Título da tarefa |
+| **Descrição** | Descrição |
+| **Prazo** | Data de vencimento |
+| **Categoria** | Categoria |
+| **Subtarefas** | Subtarefas |
+| **Notas do vault** | Notas vinculadas (só com o módulo Cérebro ativo) |
+| **Agenda** | Eventos de calendário desta tarefa |
+
+Clique em **Salvar** para gravar as mudanças no título, na descrição, no prazo e na categoria. Subtarefas, vínculos com notas e eventos de calendário são salvos na hora.
+
+### Subtarefas
+
+Digite em **Nova subtarefa** e pressione `Enter` ou clique em **+**. Clique na caixa de seleção para marcar a subtarefa como feita. Clique no **X** para removê-la.
+
+### Notas do vault
+
+Com o módulo [Cérebro](/pt-BR/docs/features/brain) ativo, clique em **Vincular**, busque uma nota e escolha. O vínculo aparece como uma etiqueta. Se a nota foi renomeada ou movida fora do lifegui, a etiqueta fica vermelha com o texto "(nota não encontrada)". Remova o vínculo e vincule a nota de novo.
+
+### Agenda
+
+Com o [Google Calendar](/pt-BR/docs/features/calendar) conectado, clique em **Agendar** para colocar a tarefa na sua agenda:
+
+| Campo | Significado |
+| --- | --- |
+| **Título do evento** | Título do evento, preenchido com o título da tarefa |
+| **Data** | Data. Vira **A partir de** quando o evento se repete. |
+| **Hora** | Horário de início, 19:00 por padrão |
+| **Duração (min)** | Duração em minutos, 60 por padrão |
+| **Repetir semanalmente** | Repete toda semana. Escolha os dias da semana. |
+
+O evento aparece como uma etiqueta na seção **Agenda**. Clique no **X** da etiqueta para removê-lo do calendário. Se o calendário não estiver conectado, o botão mostra **Conectar calendário**.
+
+## Apagar uma tarefa
+
+Clique na lixeira do card. O card some e um aviso mostra **Desfazer** por 5 segundos. Depois disso, o lifegui apaga a tarefa de vez.
+
+## Atalhos de teclado
+
+| Atalho | Ação |
+| --- | --- |
+| `/` | Foca o brain dump |
+| `Ctrl+Enter` ou `Cmd+Enter` | Processa o brain dump |
+| `Enter` em **Nova subtarefa** | Adiciona a subtarefa |

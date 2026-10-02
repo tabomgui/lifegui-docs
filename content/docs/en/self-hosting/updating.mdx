@@ -1,0 +1,40 @@
+---
+title: Updating
+description: Update lifegui by running the installer again.
+---
+
+Run the installer again. Use the one-liner:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/tabomgui/lifegui/main/install.sh | bash
+```
+
+Or run `./install.sh` from inside the installation directory:
+
+```bash
+cd ~/lifegui && ./install.sh
+```
+
+The installer:
+
+1. Pulls the latest code.
+2. Keeps your configuration (`.env` and `backend/.env`).
+3. Rebuilds the images.
+4. Restarts the containers.
+
+Database migrations run automatically when the backend starts.
+
+## Install a specific version
+
+Set `LIFEGUI_REF` to a branch or tag:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/tabomgui/lifegui/main/install.sh \
+  | LIFEGUI_REF=<branch-or-tag> bash
+```
+
+<Callout type="info">
+  The installer pulls with fast-forward only. If you changed files in the installation directory, it stops. Commit or discard your local changes, then run it again.
+</Callout>
+
+Back up your data before you update. See [Backup and restore](/docs/self-hosting/backup).

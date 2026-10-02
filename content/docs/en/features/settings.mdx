@@ -1,0 +1,87 @@
+---
+title: Settings
+description: Turn modules on and off, connect Google Calendar, set the vault root, manage capture tokens and replay the introduction.
+---
+
+Open **Configurações** (Settings) at the bottom of the sidebar. The page has these sections, from top to bottom:
+
+| Section | Shown |
+| --- | --- |
+| Modules | Always |
+| **Google Calendar** | Always |
+| **Vaults do Cérebro** (Brain vaults) | When the Brain module is on |
+| **Captura pelo celular** (Mobile capture) | When the Brain module is on |
+| **Introdução** (Introduction) | Always |
+
+## Modules
+
+The list at the top reads "Ative quais módulos aparecem na barra lateral" (Choose which modules appear in the sidebar). Use the switch on each module:
+
+| Module | Default | Page |
+| --- | --- | --- |
+| **Tarefas** (Tasks) | On | [Tasks](/docs/features/tasks) |
+| **Hábitos** (Habits) | On | [Habits](/docs/features/habits) |
+| **Cérebro** (Brain) | Off | [Brain](/docs/features/brain) |
+
+Each user turns modules on and off for their own account. Turning a module off hides it from the sidebar and from the dashboards. Your data stays. If you open the page of a module that is off, lifegui sends you to the first module that is on, or to **Configurações** when all are off.
+
+The **Agenda** (Calendar) page is not a module. It is always in the sidebar.
+
+<Callout type="info">
+  Turning on **Cérebro** here does not create your vault. Open the **Cérebro** page and click **Ativar Cérebro** (Activate Brain). The first-run wizard does both at once.
+</Callout>
+
+## Google Calendar
+
+This section shows the state of your calendar connection:
+
+| State | What you see |
+| --- | --- |
+| The instance has no Google credentials | "Requer credenciais do Google nesta instância" (Requires Google credentials on this instance), with a **Como configurar** (How to set up) link. See [Google Calendar setup](/docs/self-hosting/google-calendar). |
+| Not connected | The **Conectar Google Calendar** (Connect Google Calendar) button. |
+| Connected | **Conectado** (Connected) with the connection date, and the **Desconectar** (Disconnect) button. |
+
+See [Calendar](/docs/features/calendar#connect-your-calendar) for the connection steps.
+
+## Brain vaults
+
+The **Vaults do Cérebro** (Brain vaults) section sets the root folder of the vaults on the server. Each user's vault is a subfolder named after the user ID: `<root>/<user id>`.
+
+<Callout type="warn">
+  The root applies to the whole instance, for every user. Any signed-in user can change it.
+</Callout>
+
+- Enter an absolute path that starts with `/` and click **Salvar** (Save). The path is inside the backend container.
+- Leave the field empty and save to go back to the default. The placeholder shows the default path. On a Docker install, the default is `/vaults`, mapped to the `vaults` folder of the installation directory. See [Configuration](/docs/self-hosting/configuration).
+- Changing the root does not move existing vaults. Move the files yourself.
+
+The line under the field shows the state of your vault:
+
+| Message | Meaning |
+| --- | --- |
+| **Seu vault:** `<path>` | Your vault exists at this path. |
+| **A raiz existe, mas seu vault (...) ainda não.** | The root exists, but your vault does not. Activate it on the **Cérebro** page. |
+| **A raiz** `<path>` **não existe no servidor.** | The root folder does not exist on the server. |
+
+## Mobile capture
+
+The **Captura pelo celular** (Mobile capture) section creates and revokes the tokens that send content to your Brain inbox from your phone. See [Mobile capture](/docs/features/mobile-capture).
+
+## Introduction
+
+Click **Rever introdução** (Replay introduction) to open the first-run wizard again. It starts from the first step. See [First launch](/docs/getting-started/first-launch#first-run-wizard).
+
+## Theme
+
+The button at the top right of every page switches between the light and dark themes. Until you click it, lifegui follows the theme of your system.
+
+## Keyboard shortcuts
+
+| Shortcut | Where | Action |
+| --- | --- | --- |
+| `/` | Tasks page | Focus the brain dump |
+| `Ctrl+Enter` or `Cmd+Enter` | Brain dump | Process the tasks |
+
+## Sign out
+
+Click **Sair** (Sign out) next to your name at the bottom of the sidebar.

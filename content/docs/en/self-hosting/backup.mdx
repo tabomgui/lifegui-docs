@@ -1,0 +1,48 @@
+---
+title: Backup and restore
+description: Back up the database, vaults, MCP OAuth keys and configuration, and restore them on a new machine.
+---
+
+## What to back up
+
+| Item | What it is |
+| --- | --- |
+| Database | The MySQL database `lifegui`: accounts, tasks, habits, categories, settings and tokens. It lives in a Docker volume, so you export it with `mysqldump`. |
+| `vaults/` | The Brain vaults: one Obsidian-compatible folder of Markdown notes per user, at `vaults/{user_id}`. |
+| `oauth-keys/` | The OAuth keys of the MCP server. If you lose them, connected MCP clients must sign in again. |
+| `.env` | Docker Compose settings: the database password and the web port. |
+| `backend/.env` | App settings: app key, URL, cookies, sign-up and Google credentials. |
+
+## Back up
+
+Run the `tar` step with `sudo`. `oauth-keys/` is owned by root because `php artisan passport:keys` creates it inside the container.
+
+```bash
+cd ~/lifegui
+docker compose -f docker-compose.prod.yml exec -T mysql \
+  sh -c 'mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" lifegui' > lifegui.sql
+sudo tar czf lifegui-backup.tgz lifegui.sql vaults oauth-keys .env backend/.env
+```
+
+This creates `lifegui-backup.tgz` in the installation directory. Copy it to a safe place.
+
+## Restore
+
+To restore on a new machine, extract the backup in a fresh clone before you start anything. Use `sudo` again, so the restored files keep their original ownership.
+
+```bash
+git clone https://github.com/tabomgui/lifegui.git ~/lifegui && cd ~/lifegui
+sudo tar xzf /path/to/lifegui-backup.tgz
+docker compose -f docker-compose.prod.yml up -d --wait mysql
+docker compose -f docker-compose.prod.yml exec -T mysql \
+  sh -c 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" lifegui' < lifegui.sql
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+These commands:
+
+1. Clone the repository.
+2. Extract the database dump, vaults, OAuth keys and configuration files.
+3. Start MySQL and wait until it is healthy.
+4. Import the database dump.
+5. Build and start the whole stack.

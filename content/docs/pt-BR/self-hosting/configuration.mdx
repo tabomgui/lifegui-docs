@@ -1,0 +1,60 @@
+---
+title: Configuração
+description: Configure o lifegui pelo backend/.env e reinicie o backend para aplicar as mudanças.
+---
+
+O instalador cria dois arquivos de configuração no diretório de instalação (`~/lifegui` por padrão):
+
+- `.env`: usado pelo Docker Compose. Guarda `DB_PASSWORD` e `LIFEGUI_PORT`, a porta do host do container web.
+- `backend/.env`: configurações do app para a API Laravel.
+
+O instalador nunca sobrescreve esses arquivos. Edite-os à mão.
+
+## Aplicar mudanças
+
+Depois de editar o `backend/.env`, reinicie o backend:
+
+```bash
+cd ~/lifegui && docker compose -f docker-compose.prod.yml restart backend
+```
+
+## Chaves do backend/.env
+
+| Chave | Padrão | Descrição |
+| --- | --- | --- |
+| `APP_URL`, `FRONTEND_URL` | a sua URL | Precisam bater com o endereço no navegador. |
+| `SESSION_DOMAIN` | host da sua URL | Domínio dos cookies. |
+| `SANCTUM_STATEFUL_DOMAINS` | `host[:porta]` da sua URL | Host onde o SPA roda. |
+| `SESSION_SECURE_COOKIE` | `true` para URLs https | Envia cookies só por HTTPS. |
+| `REGISTRATION_ENABLED` | `false` | Permite novos cadastros depois da primeira conta. |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | vazio | Ativam o login com Google e o Calendar. Veja [Google Calendar](/pt-BR/docs/self-hosting/google-calendar). |
+| `GOOGLE_REDIRECT_URI` | `<sua URL>/api/auth/google/callback` | Redirect URI do login com Google. |
+| `VAULTS_PATH` | `/vaults` | Raiz dos vaults do Cérebro dentro do container. Corresponde à pasta `vaults/` no diretório de instalação. |
+
+<Callout type="info">
+  `DB_PASSWORD` aparece tanto no `.env` quanto no `backend/.env`. Os dois valores precisam ser iguais.
+</Callout>
+
+## Mudar a URL
+
+Para servir o lifegui em outro endereço:
+
+1. No `backend/.env`, atualize `APP_URL`, `FRONTEND_URL`, `SESSION_DOMAIN`, `SANCTUM_STATEFUL_DOMAINS`, `SESSION_SECURE_COOKIE` e `GOOGLE_REDIRECT_URI`.
+2. Reinicie o backend:
+
+   ```bash
+   cd ~/lifegui && docker compose -f docker-compose.prod.yml restart backend
+   ```
+
+3. Se você usa o login com Google ou o Calendar, adicione os novos redirect URIs ao seu cliente OAuth. Veja [Google Calendar](/pt-BR/docs/self-hosting/google-calendar).
+
+Por exemplo, para passar a usar `https://life.example.com`:
+
+```bash
+APP_URL=https://life.example.com
+FRONTEND_URL=https://life.example.com
+SESSION_DOMAIN=life.example.com
+SANCTUM_STATEFUL_DOMAINS=life.example.com
+SESSION_SECURE_COOKIE=true
+GOOGLE_REDIRECT_URI=https://life.example.com/api/auth/google/callback
+```

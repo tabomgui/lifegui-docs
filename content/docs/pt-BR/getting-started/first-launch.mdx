@@ -1,0 +1,116 @@
+---
+title: Primeiro acesso
+description: Crie a primeira conta na tela de setup e siga o assistente de configuração inicial.
+---
+
+## Criar a primeira conta
+
+Abra a URL do lifegui. Enquanto a instância não tiver usuários, o lifegui leva você para a tela de setup em `/setup`, com o título **Configurar o lifegui**. A conta criada aqui é a conta principal da instância.
+
+Preencha os campos:
+
+| Campo | Conteúdo |
+| --- | --- |
+| **Nome** | Seu nome |
+| **Email** | Seu email |
+| **Senha** | Senha com pelo menos 8 caracteres |
+| **Confirmar senha** | A mesma senha de novo |
+
+Clique em **Criar conta**. O lifegui faz o seu login e abre o assistente de configuração inicial.
+
+A tela de setup só funciona enquanto não houver usuários. Depois que a primeira conta existe, `/setup` redireciona para a tela de login.
+
+<Callout type="warn">
+  Enquanto a primeira conta não existir, qualquer pessoa que alcance a URL pode assumir a instância. Crie a conta logo depois de instalar.
+</Callout>
+
+## Assistente de configuração inicial
+
+![Assistente de configuração inicial](/screenshots/onboarding.png)
+
+O assistente abre sozinho depois do seu primeiro login. Use **Continuar** e **Voltar** para navegar entre os passos. Clique em **Pular configuração** a qualquer momento para fechá-lo. Tudo o que você definir aqui pode ser mudado depois em **Configurações**.
+
+<Steps>
+<Step>
+
+### Início
+
+Boas-vindas com uma visão geral do lifegui.
+
+</Step>
+<Step>
+
+### Módulos
+
+Ative ou desative cada módulo:
+
+- **Tarefas**: ativado por padrão.
+- **Hábitos**: ativado por padrão.
+- **Cérebro**: desativado por padrão. Ao ativá-lo, o lifegui cria o seu vault no servidor.
+
+</Step>
+<Step>
+
+### Categorias
+
+Só aparece com **Tarefas** ativado. Cada categoria vira uma aba do quadro de tarefas. Clique numa sugestão para adicioná-la:
+
+- **Trabalho**
+- **Pessoal**
+- **Estudos**
+- **Casa**
+- **Saúde**
+
+Para criar uma categoria sua, digite o nome em **Outra categoria** e clique em **Adicionar**.
+
+</Step>
+<Step>
+
+### Hábitos
+
+Só aparece com **Hábitos** ativado. Ajuste a meta semanal (de 1 a 7 vezes por semana) e clique em **Adicionar**:
+
+| Hábito | Meta padrão |
+| --- | --- |
+| **Ler** | 7x por semana |
+| **Exercício** | 3x por semana |
+| **Meditar** | 5x por semana |
+| **Beber água** | 7x por semana |
+
+</Step>
+<Step>
+
+### Integrações
+
+As duas integrações são opcionais:
+
+- **Google Calendar**: clique em **Conectar Google Calendar**. O botão só aparece quando a instância tem credenciais do Google. Veja [Google Calendar](/pt-BR/docs/self-hosting/google-calendar).
+- **Assistentes de IA (MCP)**: copie a URL do MCP (`https://life.example.com/mcp`) para conectar o claude.ai, o Claude Code ou o ChatGPT. Veja [Servidor MCP](/pt-BR/docs/features/mcp).
+
+</Step>
+<Step>
+
+### Pronto
+
+Um resumo dos módulos ativos, das categorias e dos hábitos. Clique em **Começar** para concluir.
+
+</Step>
+</Steps>
+
+### Rever o assistente
+
+Para abrir o assistente de novo, vá em **Configurações** e clique em **Rever introdução**, na seção **Introdução**.
+
+## Outras contas
+
+Depois da primeira conta, o cadastro público fica desativado. Para permitir que outras pessoas criem contas, defina `REGISTRATION_ENABLED=true` no `backend/.env` e reinicie o backend. Veja [Configuração](/pt-BR/docs/self-hosting/configuration).
+
+Com o cadastro ativado, a tela de login mostra o link **Cadastre-se**, que leva a `/register`. Com o cadastro desativado, `/register` mostra **Cadastro desativado**.
+
+## Login com Google
+
+Quando a instância tem credenciais do Google, a tela de login mostra **Entrar com Google**.
+
+O login com Google só funciona para um email que já tenha conta, a menos que `REGISTRATION_ENABLED=true`. Se nenhuma conta corresponder, o lifegui volta para a tela de login com a mensagem **Esta conta Google não está cadastrada nesta instância.**
+
+Para configurar as credenciais do Google, veja [Google Calendar](/pt-BR/docs/self-hosting/google-calendar).

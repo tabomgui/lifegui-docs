@@ -1,0 +1,78 @@
+---
+title: Agenda
+description: Veja o seu Google Calendar ao vivo e agende tarefas, hábitos e notas nele.
+---
+
+A página **Agenda** mostra o seu Google Calendar e permite agendar tarefas, hábitos e notas nele. Ela está sempre na barra lateral. Não é um módulo que se ativa ou desativa.
+
+## Como funciona
+
+- **O Google é a fonte da verdade.** O lifegui lê e grava ao vivo na sua agenda principal do Google. Nenhuma cópia dos eventos fica no lifegui.
+- **O vínculo fica no próprio evento.** Quando você agenda uma tarefa, um hábito ou uma nota, o lifegui guarda o vínculo nas propriedades estendidas privadas do evento no Google. É assim que o lifegui encontra os eventos de cada item. Eventos criados pelo lifegui também recebem a descrição "Criado pelo lifegui", com um link de volta para o app.
+- **Seus outros eventos são só leitura.** O lifegui mostra os eventos que você criou em outros lugares, mas só permite editar, mover ou remover eventos criados pelo lifegui.
+- **Repetições são recorrências do Google.** Uma repetição semanal vira uma regra de recorrência no evento do Google.
+
+## Conectar sua agenda
+
+A instância precisa ter credenciais OAuth do Google configuradas. Sem elas, o lifegui mostra "Requer credenciais do Google nesta instância" no lugar do botão de conectar. Veja [Configurar o Google Calendar](/pt-BR/docs/self-hosting/google-calendar).
+
+1. Abra **Agenda** ou **Configurações**.
+2. Clique em **Conectar Google Calendar**.
+3. Entre com o Google e permita o acesso aos eventos da sua agenda.
+
+<Callout type="warn">
+  Use a conta Google com o mesmo e-mail da sua conta do lifegui. Com outra conta, o lifegui recusa a conexão e mostra "Use a mesma conta Google do seu login".
+</Callout>
+
+Para desconectar, abra **Configurações** e clique em **Desconectar** na seção **Google Calendar**. O lifegui revoga o próprio acesso no Google. Seus eventos continuam no Google Calendar.
+
+## A visão de calendário
+
+A página abre na semana atual, rolada até as 07:00. Use a barra de ferramentas para navegar entre os períodos, voltar para **Hoje** e alternar entre **Dia**, **Semana** e **Mês**.
+
+As cores mostram a origem de cada evento. Clique em um chip para esconder ou mostrar aquele tipo de evento:
+
+| Chip | Eventos | Cor |
+| --- | --- | --- |
+| **Tarefas** | Tarefas agendadas | Azul |
+| **Hábitos** | Hábitos agendados | Verde |
+| **Notas** | Notas agendadas | Roxo |
+| **Eventos** | Eventos avulsos criados no lifegui | Âmbar |
+| **Pessoais** | Eventos criados fora do lifegui | Cinza |
+
+## Criar um evento
+
+Clique em **Novo**, ou clique ou arraste sobre um horário vago no calendário. Na visão de mês, clicar em um dia usa 19:00 como horário de início.
+
+O diálogo **Novo na agenda** abre:
+
+1. Escolha o tipo: **Evento**, **Tarefa**, **Hábito** ou **Nota**.
+2. Para tarefa, hábito ou nota, escolha o item na lista. Só aparecem tarefas abertas. O título é preenchido com o nome do item. Para uma nota, fica "Estudar: `<título da nota>`".
+3. Ajuste o **Título do evento**, a **Data**, a **Hora** e a **Duração (min)**.
+4. Para repetir o evento, clique em **Repetir semanalmente** e escolha os dias da semana. O campo de data vira **A partir de**.
+5. Clique em **Criar**.
+
+Você também pode agendar a partir de um item: use a seção **Agenda** no editor de tarefa, no editor de hábito ou no painel da nota. Veja [Tarefas](/pt-BR/docs/features/tasks#agenda).
+
+## Detalhes do evento
+
+Clique em um evento para ver a data e o horário, o tipo e um selo **Recorrente** quando ele se repete. O link **Google** abre o evento no Google Calendar.
+
+Para eventos criados pelo lifegui, o diálogo também oferece:
+
+- **Abrir tarefa**, **Abrir hábito** ou **Abrir nota**: vai para o item vinculado. Uma nota abre no painel da nota, por cima do calendário.
+- **Editar**.
+- **Remover**. Para um evento recorrente, escolha **Só esta ocorrência** ou **Toda a série**.
+
+Eventos criados fora do lifegui não mostram ações.
+
+## Mover e editar eventos
+
+Arraste um evento criado pelo lifegui para movê-lo, ou arraste a borda de baixo para mudar a duração. Eventos criados fora do lifegui não podem ser arrastados.
+
+Clique em **Editar** nos detalhes do evento para mudar o **Título**, a **Data**, a **Hora** e a **Duração (min)**. Para um evento recorrente, escolha primeiro o alcance:
+
+- **Toda a série**, o padrão: muda o título, o horário, a duração e os **Dias da semana** de todas as ocorrências. O campo de data fica escondido.
+- **Só esta ocorrência**: muda o título, a data, o horário e a duração da ocorrência que você clicou.
+
+Clique em **Salvar**.

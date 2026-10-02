@@ -1,0 +1,91 @@
+---
+title: Google Calendar
+description: Create a Google OAuth client to enable Google sign-in and Google Calendar.
+---
+
+Google sign-in and Google Calendar share one OAuth client. Without it, lifegui works normally, but the **Entrar com Google** (Sign in with Google) and **Conectar Google Calendar** (Connect Google Calendar) buttons do not appear.
+
+<Callout type="info">
+  Google only accepts `https` redirect URIs, except for `localhost`. Set up [HTTPS](/docs/getting-started/https) first if you open lifegui from another address.
+</Callout>
+
+## Create the OAuth client
+
+<Steps>
+<Step>
+
+### Create a project
+
+Create a project in the [Google Cloud console](https://console.cloud.google.com/).
+
+</Step>
+<Step>
+
+### Enable the Calendar API
+
+In **APIs & Services > Library**, enable the **Google Calendar API**.
+
+</Step>
+<Step>
+
+### Configure the consent screen
+
+Configure the **OAuth consent screen** as **External**. While the app is in testing mode, add your Google account as a test user.
+
+</Step>
+<Step>
+
+### Create the client ID
+
+Create an **OAuth client ID** of type **Web application** with these authorized redirect URIs:
+
+```
+https://life.example.com/api/auth/google/callback
+https://life.example.com/api/auth/google-calendar/callback
+```
+
+The first URI is for sign-in. The second is for Calendar.
+
+</Step>
+<Step>
+
+### Add the credentials to lifegui
+
+Put the client ID and secret in `backend/.env`:
+
+```bash
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+```
+
+</Step>
+<Step>
+
+### Restart the backend
+
+```bash
+cd ~/lifegui && docker compose -f docker-compose.prod.yml restart backend
+```
+
+</Step>
+</Steps>
+
+## Connect the calendar
+
+1. Open **Configurações** (Settings).
+2. In the **Google Calendar** section, click **Conectar Google Calendar**.
+3. Sign in with Google and allow access.
+
+You can also connect from the **Integrações** (Integrations) step of the [first-run wizard](/docs/getting-started/first-launch).
+
+lifegui asks for the `https://www.googleapis.com/auth/calendar.events` scope. It reads and writes events in your calendar and keeps no local copy.
+
+To disconnect, click **Desconectar** (Disconnect) in the same section.
+
+### Use the same email
+
+Connect the calendar with the same Google account email that you use to sign in to lifegui. If the emails differ, lifegui refuses the connection and shows **Use a mesma conta Google do seu login** (Use the same Google account as your login).
+
+## Google sign-in
+
+With the credentials set, the login page shows **Entrar com Google**. Google sign-in only works for emails that already have an account, unless `REGISTRATION_ENABLED=true`. See [First launch](/docs/getting-started/first-launch#google-sign-in).

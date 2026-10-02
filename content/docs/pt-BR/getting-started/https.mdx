@@ -1,0 +1,61 @@
+---
+title: HTTPS e proxy reverso
+description: Sirva o lifegui por HTTPS com Cloudflare Tunnel, Tailscale ou Caddy.
+---
+
+`http://localhost` funciona sem configuração extra. O container web serve HTTP puro, então para ter HTTPS você coloca um proxy que termina o TLS na frente dele.
+
+## Quando você precisa de HTTPS
+
+- Você abre o lifegui de outros dispositivos. Sem HTTPS, as senhas trafegam em texto puro.
+- Você usa o login com Google ou o Calendar. O Google só aceita redirect URIs `https`, com exceção de `localhost`.
+- Você conecta o claude.ai ou o ChatGPT via MCP. Eles exigem uma URL `https` pública.
+
+## Configurar
+
+1. Coloque um proxy que termina o TLS na frente do container web.
+2. Informe a URL `https://` ao instalador, por exemplo `LIFEGUI_URL=https://life.example.com`.
+
+Se o lifegui já está instalado com outra URL, veja [Mudar a URL](/pt-BR/docs/self-hosting/configuration#mudar-a-url).
+
+Os exemplos abaixo supõem que o container web escuta na porta `8080`.
+
+<Tabs items={['Cloudflare Tunnel', 'Tailscale', 'Caddy']}>
+<Tab value="Cloudflare Tunnel">
+
+Aponte um hostname público do seu túnel para `http://localhost:8080`.
+
+</Tab>
+<Tab value="Tailscale">
+
+Publique o lifegui dentro da sua tailnet:
+
+```bash
+tailscale serve --bg 8080
+```
+
+O lifegui fica disponível em `https://<machine>.<tailnet>.ts.net`.
+
+O MCP pelo claude.ai precisa de acesso público. Nesse caso, use o Funnel:
+
+```bash
+tailscale funnel --bg 8080
+```
+
+</Tab>
+<Tab value="Caddy">
+
+O Caddy obtém e renova o certificado sozinho:
+
+```
+life.example.com {
+    reverse_proxy localhost:8080
+}
+```
+
+</Tab>
+</Tabs>
+
+## X-Forwarded-Proto
+
+O proxy precisa enviar o cabeçalho `X-Forwarded-Proto`. Cloudflare, Tailscale e Caddy fazem isso por padrão. Se você usa outro proxy, confira se ele define esse cabeçalho.

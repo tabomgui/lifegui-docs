@@ -1,0 +1,19 @@
+---
+title: Uninstall
+description: Remove lifegui, its containers, images and data.
+---
+
+<Callout type="error">
+  This deletes all data, including the database volume, the vaults and the configuration. It cannot be undone. [Back up](/docs/self-hosting/backup) first if you want to keep anything.
+</Callout>
+
+```bash
+cd ~/lifegui
+docker compose -f docker-compose.prod.yml down -v --rmi local
+cd ~ && rm -rf ~/lifegui
+```
+
+- `down -v --rmi local` stops and removes the containers, the database volume and the images built locally.
+- `rm -rf ~/lifegui` removes the installation directory, with the vaults, OAuth keys and configuration files.
+
+If you installed to another directory with `LIFEGUI_DIR`, use that path instead of `~/lifegui`.

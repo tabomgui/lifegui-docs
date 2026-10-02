@@ -1,0 +1,91 @@
+---
+title: Google Calendar
+description: Crie um cliente OAuth do Google para ativar o login com Google e o Google Calendar.
+---
+
+O login com Google e o Google Calendar usam o mesmo cliente OAuth. Sem ele, o lifegui funciona normalmente, mas os botões **Entrar com Google** e **Conectar Google Calendar** não aparecem.
+
+<Callout type="info">
+  O Google só aceita redirect URIs `https`, com exceção de `localhost`. Se você abre o lifegui por outro endereço, configure o [HTTPS](/pt-BR/docs/getting-started/https) antes.
+</Callout>
+
+## Criar o cliente OAuth
+
+<Steps>
+<Step>
+
+### Crie um projeto
+
+Crie um projeto no [Google Cloud console](https://console.cloud.google.com/).
+
+</Step>
+<Step>
+
+### Ative a API do Calendar
+
+Em **APIs & Services > Library**, ative a **Google Calendar API**.
+
+</Step>
+<Step>
+
+### Configure a tela de consentimento
+
+Configure a **OAuth consent screen** como **External**. Enquanto o app estiver em modo de teste, adicione a sua conta Google como usuário de teste.
+
+</Step>
+<Step>
+
+### Crie o client ID
+
+Crie um **OAuth client ID** do tipo **Web application** com estes redirect URIs autorizados:
+
+```
+https://life.example.com/api/auth/google/callback
+https://life.example.com/api/auth/google-calendar/callback
+```
+
+O primeiro é do login. O segundo é do Calendar.
+
+</Step>
+<Step>
+
+### Adicione as credenciais ao lifegui
+
+Coloque o client ID e o secret no `backend/.env`:
+
+```bash
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+```
+
+</Step>
+<Step>
+
+### Reinicie o backend
+
+```bash
+cd ~/lifegui && docker compose -f docker-compose.prod.yml restart backend
+```
+
+</Step>
+</Steps>
+
+## Conectar a agenda
+
+1. Abra **Configurações**.
+2. Na seção **Google Calendar**, clique em **Conectar Google Calendar**.
+3. Entre com o Google e autorize o acesso.
+
+Você também pode conectar pelo passo **Integrações** do [assistente de configuração inicial](/pt-BR/docs/getting-started/first-launch).
+
+O lifegui pede o escopo `https://www.googleapis.com/auth/calendar.events`. Ele lê e escreve eventos na sua agenda e não guarda cópia local.
+
+Para desconectar, clique em **Desconectar** na mesma seção.
+
+### Use o mesmo email
+
+Conecte a agenda com a mesma conta Google (mesmo email) que você usa para entrar no lifegui. Se os emails forem diferentes, o lifegui recusa a conexão e mostra **Use a mesma conta Google do seu login**.
+
+## Login com Google
+
+Com as credenciais configuradas, a tela de login mostra **Entrar com Google**. O login com Google só funciona para emails que já têm conta, a menos que `REGISTRATION_ENABLED=true`. Veja [Primeiro acesso](/pt-BR/docs/getting-started/first-launch#login-com-google).

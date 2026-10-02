@@ -1,0 +1,65 @@
+---
+title: Development
+description: Run lifegui locally for development, load demo data and run the tests.
+---
+
+## Set up
+
+You need Git and Docker with Compose v2.
+
+```bash
+git clone https://github.com/tabomgui/lifegui.git && cd lifegui
+cp backend/.env.example backend/.env
+docker compose up
+```
+
+| Service | URL |
+| --- | --- |
+| Frontend with hot reload | http://localhost:5173 |
+| API | http://localhost:8000 |
+
+The backend container installs the dependencies, generates `APP_KEY` and runs the migrations. Sign-up is open in development: `backend/.env.example` sets `REGISTRATION_ENABLED=true`.
+
+## Demo data
+
+Load a demo user with sample data:
+
+```bash
+docker compose exec backend php artisan db:seed --class=DemoSeeder
+```
+
+Sign in with:
+
+- Email: `demo@lifegui.test`
+- Password: `demo1234`
+
+## Tests
+
+```bash
+cd backend && php artisan test   # Pest
+cd frontend && npm run build     # typecheck and build
+```
+
+The backend uses Pest. The frontend has no unit tests: `npm run build` runs the TypeScript check and the production build.
+
+## Tech stack
+
+| Layer | Technology |
+| --- | --- |
+| Backend | Laravel 12 (PHP 8.4), MySQL 8, Sanctum (SPA), Passport and laravel/mcp (MCP), Pest |
+| Frontend | React 19, Vite, TypeScript, Tailwind CSS v4, shadcn/ui, TanStack Query, FullCalendar, Milkdown, lucide-react |
+| Infra | Docker Compose. nginx serves the SPA and proxies `/api`, `/sanctum`, `/mcp`, `/oauth` and `/.well-known` to the API. |
+
+Every domain model is scoped to the signed-in user. Each user gets an Obsidian vault at `vaults/{user_id}` on the host.
+
+## Repository layout
+
+```
+backend/    Laravel API (domain logic in app/Support: Calendar, Vault, Reports)
+frontend/   React SPA (pages, components per module, TanStack Query hooks)
+install.sh  One-command installer and updater
+```
+
+## License
+
+lifegui is licensed under [AGPL-3.0](https://github.com/tabomgui/lifegui/blob/main/LICENSE).

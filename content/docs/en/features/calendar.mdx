@@ -1,0 +1,78 @@
+---
+title: Calendar
+description: See your Google Calendar live and schedule tasks, habits and notes on it.
+---
+
+The **Agenda** (Calendar) page shows your Google Calendar and lets you schedule tasks, habits and notes on it. It is always in the sidebar. It is not a module you turn on or off.
+
+## How it works
+
+- **Google is the source of truth.** lifegui reads and writes your primary Google calendar live. It stores no copy of your events.
+- **Links live in the event.** When you schedule a task, habit or note, lifegui stores the link in the private extended properties of the Google event. That is how lifegui finds the events of an item. Events created by lifegui also get the description "Criado pelo lifegui" (Created by lifegui) with a link back to the app.
+- **Your other events are read-only.** lifegui shows events you created elsewhere, but you can only edit, move or delete events that lifegui created.
+- **Repeats are Google recurrences.** A weekly repeat becomes a recurrence rule on the Google event.
+
+## Connect your calendar
+
+The instance needs Google OAuth credentials first. If they are missing, lifegui shows "Requer credenciais do Google nesta instância" (Requires Google credentials on this instance) instead of the connect button. See [Google Calendar setup](/docs/self-hosting/google-calendar).
+
+1. Open **Agenda** or **Configurações** (Settings).
+2. Click **Conectar Google Calendar** (Connect Google Calendar).
+3. Sign in with Google and allow access to your calendar events.
+
+<Callout type="warn">
+  Use the Google account with the same email as your lifegui account. With another account, lifegui refuses the connection and shows "Use a mesma conta Google do seu login" (Use the same Google account as your sign-in).
+</Callout>
+
+To disconnect, open **Configurações** and click **Desconectar** (Disconnect) in the **Google Calendar** section. lifegui revokes its access with Google. Your events stay on Google Calendar.
+
+## The calendar view
+
+The page opens on the current week and scrolls to 07:00. Use the toolbar to move between periods, go back to **Hoje** (Today), and switch between **Dia** (Day), **Semana** (Week) and **Mês** (Month).
+
+Colors show where each event comes from. Click a chip to hide or show that kind of event:
+
+| Chip | Events | Color |
+| --- | --- | --- |
+| **Tarefas** | Scheduled tasks | Blue |
+| **Hábitos** | Scheduled habits | Green |
+| **Notas** | Scheduled notes | Purple |
+| **Eventos** | Standalone events created in lifegui | Amber |
+| **Pessoais** | Events created outside lifegui | Gray |
+
+## Create an event
+
+Click **Novo** (New), or click or drag over an empty slot in the calendar. In the month view, clicking a day uses 19:00 as the start time.
+
+The **Novo na agenda** (New on calendar) dialog opens:
+
+1. Pick the kind: **Evento** (Event), **Tarefa** (Task), **Hábito** (Habit) or **Nota** (Note).
+2. For a task, habit or note, pick the item in the list. Only open tasks are listed. The title fills in with the item name. For a note, it reads "Estudar: `<note title>`" (Study: note title).
+3. Adjust the **Título do evento** (Event title), **Data** (Date), **Hora** (Time) and **Duração (min)** (Duration in minutes).
+4. To repeat the event, click **Repetir semanalmente** (Repeat weekly) and pick the weekdays. The date field becomes **A partir de** (Starting on).
+5. Click **Criar** (Create).
+
+You can also schedule from an item: use the **Agenda** section in the task editor, the habit editor or the note panel. See [Tasks](/docs/features/tasks#calendar).
+
+## Event details
+
+Click an event to see its date and time, its kind, and a **Recorrente** (Recurring) badge when it repeats. The **Google** link opens the event in Google Calendar.
+
+For events created by lifegui, the dialog also offers:
+
+- **Abrir tarefa**, **Abrir hábito** or **Abrir nota** (Open task, habit or note): goes to the linked item. A note opens in the note panel on top of the calendar.
+- **Editar** (Edit).
+- **Remover** (Remove). For a recurring event, choose **Só esta ocorrência** (This occurrence only) or **Toda a série** (The whole series).
+
+Events created outside lifegui show no actions.
+
+## Move and edit events
+
+Drag an event created by lifegui to move it, or drag its bottom edge to change its length. Events created outside lifegui cannot be dragged.
+
+Click **Editar** (Edit) in the event details to change the **Título** (Title), **Data** (Date), **Hora** (Time) and **Duração (min)** (Duration). For a recurring event, pick the scope first:
+
+- **Toda a série** (The whole series), the default: change the title, time, duration and **Dias da semana** (Weekdays) of every occurrence. The date field is hidden.
+- **Só esta ocorrência** (This occurrence only): change the title, date, time and duration of the occurrence you clicked.
+
+Click **Salvar** (Save).

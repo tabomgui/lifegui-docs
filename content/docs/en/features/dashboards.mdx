@@ -1,0 +1,84 @@
+---
+title: Dashboards
+description: Charts and stat tiles for your habits, tasks and notes over a chosen period.
+---
+
+![Dashboards page](/screenshots/dashboards.png)
+
+The **Dashboards** page turns your history into charts. It appears in the sidebar when at least one of the **Tarefas** (Tasks), **Hábitos** (Habits) or **Cérebro** (Brain) modules is on.
+
+## Tabs and period
+
+The page has one tab per module: **Hábitos** (Habits), **Tarefas** (Tasks) and **Cérebro** (Brain). Only the tabs of modules you turned on appear. The first available tab opens by default.
+
+Use the **Período** (Period) filter to pick the time window: **7 dias** (7 days), **30 dias** (30 days, the default), **90 dias** (90 days) or **1 ano** (1 year). The window ends today.
+
+Each tab starts with a row of stat tiles. Where a tile shows a delta, it compares the selected period with the period of the same length right before it. Some numbers are a live snapshot of the current state and do not depend on the period. The tables below mark them as "live".
+
+Hover over bars and chart segments to see their exact values.
+
+## Hábitos tab
+
+### Stat tiles
+
+| Tile | Shows |
+| --- | --- |
+| **Dias perfeitos** (Perfect days) | Days in the period when you did every daily habit, with the current and the record runs. Only habits without a weekly target count as daily. |
+| **Consistência** (Consistency) | Done check-ins divided by expected check-ins over the period, with the change in percentage points. |
+| **Aderência média** (Average adherence) | The average of each habit's adherence to its target. |
+| **Hábitos ativos** (Active habits) | Habits that are not archived. |
+
+A habit with a weekly target of N is expected N/7 times per day. A habit without a target is expected every day.
+
+### Charts
+
+| Chart | Shows |
+| --- | --- |
+| **Consistência diária** (Daily consistency) | The daily percentage, its 7-day moving average and the period average. |
+| **Radar de aderência por hábito** (Adherence radar) | Each habit's adherence to its target in the period. |
+| **Sequência por hábito** (Streak per habit) | Current streak against the record for each habit. Broken streaks show in red. This chart counts consecutive done days only, so a skipped day ends the run. |
+| **Hábitos concluídos por dia** (Habits done per day) | A heatmap of check-ins per day. |
+
+## Tarefas tab
+
+### Stat tiles
+
+| Tile | Shows |
+| --- | --- |
+| **Tarefas concluídas** (Tasks done) | Tasks completed in the period, with a weekly sparkline. |
+| **Fluxo líquido** (Net flow) | Tasks completed minus tasks created. A positive number means the backlog shrinks. |
+| **Tarefas atrasadas** (Overdue tasks) | Open tasks past their due date, and the age of the oldest one. Live. |
+| **Tempo de ciclo mediano** (Median cycle time) | The median number of days from creation to completion. |
+
+### Charts
+
+| Chart | Shows |
+| --- | --- |
+| **Criadas vs concluídas por semana** (Created vs done per week) | Tasks created and completed each week. Weeks where you completed fewer than you created are shaded. |
+| **Trabalho aberto por categoria** (Open work by category) | A donut of open tasks per category. Live. |
+| **Tarefas mais antigas em aberto** (Oldest open tasks) | The open tasks that have waited longest. Bars turn amber after 7 days and red after 30. Live. |
+| **Vencendo em breve — próximos 7 dias** (Due in the next 7 days) | Open tasks due on each of the next 7 days, next to the overdue count. Live. |
+| **Trabalho aberto sem data** (Open work without a due date) | How many open tasks have no due date. Live. |
+| **Taxa de conclusão no prazo** (On-time rate) | The share of tasks with a due date completed on or before it, with the total count and the change from the previous period. |
+| **Atrasadas por tempo de atraso** (Overdue by age) | Overdue tasks grouped by days late: 1–3, 4–7, 8–30 and 30+. Live. |
+| **Tarefas concluídas por dia** (Tasks done per day) | A heatmap of completions per day. |
+
+## Cérebro tab
+
+### Stat tiles
+
+| Tile | Shows |
+| --- | --- |
+| **Notas no vault** (Notes in the vault) | Notes across all categories. |
+| **Em estudo** (Studying) | Notes with the status **Estudando**. |
+| **Concluídas** (Done) | Notes with the status **Concluído**. |
+| **Inbox pendente** (Pending inbox) | Captures waiting for triage. |
+
+### Charts
+
+| Chart | Shows |
+| --- | --- |
+| **Funil de status** (Status funnel) | How many notes are at each status. |
+| **Notas por categoria** (Notes per category) | Note count for each category. |
+| **Atividade de escrita por semana** (Writing activity per week) | Notes created and updated each week. |
+| **Backlog do inbox** (Inbox backlog) | Pending captures, grouped by the week they arrived. |

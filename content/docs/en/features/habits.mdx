@@ -1,0 +1,66 @@
+---
+title: Habits
+description: Check in daily, skip days without breaking a streak and track weekly targets.
+---
+
+![Habits page](/screenshots/habits.png)
+
+The **Hábitos** (Habits) module tracks recurring habits day by day. Open it from **Hábitos** in the sidebar (`/habits`). You can turn it off in [Settings](/docs/features/settings).
+
+## The Hoje card
+
+The **Hoje** (Today) card at the top always shows today, whatever week the grid below shows. The header reads, for example, "3 de 5 feitos" (3 of 5 done).
+
+Each habit has two buttons:
+
+- **Check button:** marks the habit done today. Click it again to clear the day.
+- **Dashed button:** skips today. Use it for a day off or a trip. A skipped habit reads "pulado hoje · não quebra o streak" (skipped today, does not break the streak). Click the button again to undo the skip.
+
+Each habit also shows its weekly target (for example "meta 3/sem", target 3 per week, or "sem meta", no target), its current streak next to a flame icon, and a progress ring with the done count for the week.
+
+## Weekly grid
+
+Below the card, a grid shows one row per habit and one column per weekday, **Seg** (Mon) to **Dom** (Sun).
+
+- Use the arrows to go to the previous or next week. The weeks run from Monday to Sunday.
+- Click a past day or today to toggle it done. Future days are disabled.
+- Done days show a check. Skipped days show a dash with a dashed amber border.
+- Each row shows the done count for the week, for example "2/3 esta semana" (2 of 3 this week), and the current streak.
+
+<Callout type="info">
+  You can only skip a day from the **Hoje** card. Clicking a skipped day in the grid marks it done.
+</Callout>
+
+## Create and edit habits
+
+Click **Novo hábito** (New habit). Fill in the dialog:
+
+| Field | Meaning |
+| --- | --- |
+| **Nome** | Name |
+| **Meta semanal (opcional, 1–7)** | Weekly target, optional, from 1 to 7 days |
+| **Cor** | Color |
+| **Ícone** | Icon |
+
+Click **Salvar** (Save). Leave the target empty for a habit you want to do every day. The [dashboards](/docs/features/dashboards) treat habits without a target as daily habits.
+
+To edit a habit, hover over its row and click the pencil. The edit dialog has two more sections:
+
+- **Notas do vault** (Vault notes): link notes from the [Brain](/docs/features/brain). Only shown when the Brain module is on.
+- **Agenda** (Calendar): schedule the habit on [Google Calendar](/docs/features/calendar). The **Repetir semanalmente** (Repeat weekly) option starts turned on, so you only pick the weekdays.
+
+## Streaks
+
+The streak counts consecutive days, going back from today:
+
+- If today has no check-in yet, the count starts from yesterday. You do not lose your streak in the morning before you check in.
+- A done day adds one to the streak.
+- A skipped day is neutral. It does not add to the streak and does not break it.
+- A day with no check-in breaks the streak.
+
+## Archive and delete
+
+Hover over a habit row to see its actions:
+
+- **Arquivar** (Archive): hides the habit from the card, the grid and the dashboards. Its history stays. To bring it back, click **Arquivados** (Archived) at the bottom of the page and then **Restaurar** (Restore).
+- **Apagar** (Delete): deletes the habit after a confirmation.

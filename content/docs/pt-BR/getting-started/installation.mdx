@@ -1,0 +1,106 @@
+---
+title: Instalação
+description: Instale o lifegui com um único comando no Linux, no macOS ou no Windows (WSL2).
+---
+
+## Requisitos
+
+- Linux ou macOS. No Windows, use o WSL2 (veja [Windows](#windows)).
+- `git`, `curl` e `openssl`.
+- Docker com Compose v2 (`docker compose`). No Linux, o instalador se oferece para instalar o Docker para você. No macOS, instale o [Docker Desktop](https://www.docker.com/products/docker-desktop/) ou o [OrbStack](https://orbstack.dev) e deixe-o rodando antes.
+
+## Instalar
+
+Rode o instalador:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/tabomgui/lifegui/main/install.sh | bash
+```
+
+O instalador pergunta qual URL você vai usar para abrir o lifegui. O padrão é `http://localhost:8080`. Se o host não for `localhost`, ele também pergunta a porta local do container web. Aponte o seu proxy ou túnel para essa porta.
+
+Ao terminar, abra a URL exibida e crie a sua conta. Veja [Primeiro acesso](/pt-BR/docs/getting-started/first-launch).
+
+<Callout type="warn">
+  Crie a sua conta logo em seguida. Enquanto a primeira conta não existir, qualquer pessoa que alcance a URL pode assumir a instância. Conclua a configuração antes de expor o lifegui publicamente.
+</Callout>
+
+## Instalação sem perguntas
+
+Defina `LIFEGUI_URL` para pular todas as perguntas:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/tabomgui/lifegui/main/install.sh \
+  | LIFEGUI_URL=https://life.example.com LIFEGUI_PORT=8080 bash
+```
+
+| Variável | Padrão | Descrição |
+| --- | --- | --- |
+| `LIFEGUI_URL` | perguntado, `http://localhost:8080` | URL pública, no formato `http(s)://host[:porta]`, sem caminho. Com ela definida, o instalador não faz nenhuma pergunta. |
+| `LIFEGUI_PORT` | a porta da URL em localhost, senão `8080` | Porta do host publicada pelo container web. |
+| `LIFEGUI_DIR` | `~/lifegui` | Diretório de instalação. |
+| `LIFEGUI_REF` | `main` | Branch ou tag a instalar. |
+
+Mesmo com uma URL `https://`, o container web serve HTTP puro. Termine o TLS num proxy na frente dele. Veja [HTTPS e proxy reverso](/pt-BR/docs/getting-started/https).
+
+## Windows
+
+1. Instale o [WSL2](https://learn.microsoft.com/windows/wsl/install).
+2. Instale o Docker Desktop com o backend WSL2.
+3. Rode o instalador no terminal do WSL2.
+
+## O que o instalador faz
+
+<Steps>
+<Step>
+
+### Verifica os pré-requisitos
+
+Confere se há `git`, `curl`, `openssl` e Docker com Compose v2. No Linux, oferece instalar o Docker pelo `get.docker.com`. Se o seu usuário não estiver no grupo `docker`, usa `sudo` naquela execução.
+
+</Step>
+<Step>
+
+### Baixa o código
+
+Clona o repositório em `~/lifegui` (ou em `LIFEGUI_DIR`), ou atualiza o clone se ele já existir.
+
+</Step>
+<Step>
+
+### Gera a configuração
+
+Escreve `.env` e `backend/.env` com uma senha de banco e uma chave de app aleatórias. Nunca sobrescreve arquivos existentes.
+
+</Step>
+<Step>
+
+### Compila e sobe
+
+Compila as imagens localmente e sobe o MySQL, a API Laravel e o servidor web nginx com o Docker Compose. A primeira compilação leva alguns minutos.
+
+</Step>
+<Step>
+
+### Espera o app responder
+
+Espera até 180 segundos o app responder e então exibe a URL e alguns comandos úteis.
+
+</Step>
+</Steps>
+
+## Comandos úteis
+
+Rode no diretório de instalação:
+
+```bash
+docker compose -f docker-compose.prod.yml logs -f    # acompanha os logs
+docker compose -f docker-compose.prod.yml ps         # status dos containers
+docker compose -f docker-compose.prod.yml down       # para o lifegui
+```
+
+Se o app não responder a tempo, veja os logs do backend:
+
+```bash
+cd ~/lifegui && docker compose -f docker-compose.prod.yml logs -f backend
+```

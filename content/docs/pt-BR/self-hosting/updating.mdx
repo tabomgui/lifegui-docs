@@ -1,0 +1,40 @@
+---
+title: Atualização
+description: Atualize o lifegui rodando o instalador de novo.
+---
+
+Rode o instalador de novo. Use o comando de uma linha:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/tabomgui/lifegui/main/install.sh | bash
+```
+
+Ou rode `./install.sh` de dentro do diretório de instalação:
+
+```bash
+cd ~/lifegui && ./install.sh
+```
+
+O instalador:
+
+1. Baixa o código mais recente.
+2. Mantém a sua configuração (`.env` e `backend/.env`).
+3. Recompila as imagens.
+4. Reinicia os containers.
+
+As migrations do banco rodam automaticamente quando o backend sobe.
+
+## Instalar uma versão específica
+
+Defina `LIFEGUI_REF` com uma branch ou tag:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/tabomgui/lifegui/main/install.sh \
+  | LIFEGUI_REF=<branch-ou-tag> bash
+```
+
+<Callout type="info">
+  O instalador só atualiza com fast-forward. Se você alterou arquivos no diretório de instalação, ele para. Faça commit ou descarte as mudanças locais e rode de novo.
+</Callout>
+
+Faça backup dos seus dados antes de atualizar. Veja [Backup e restauração](/pt-BR/docs/self-hosting/backup).

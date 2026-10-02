@@ -1,0 +1,129 @@
+---
+title: Tasks
+description: Capture tasks in bulk, sort them into categories and move them across a Kanban board.
+---
+
+![Tasks board](/screenshots/tasks.png)
+
+The **Tarefas** (Tasks) module is a Kanban board with three columns. It is the home page of lifegui (`/`) while the module is on. You can turn it off in [Settings](/docs/features/settings).
+
+## Brain dump
+
+The text box at the top of the page is the brain dump. Use it to get many tasks out of your head at once.
+
+1. Type one task per line.
+2. Click **Processar** (Process), or press `Ctrl+Enter` (`Cmd+Enter` on macOS).
+
+Each non-empty line becomes a task in the **A fazer** (To do) column. lifegui trims spaces and skips blank lines. You can send up to 500 lines at a time.
+
+If a category tab is open, the new tasks go to that category. The hint under the box shows it, for example "novas tarefas irão para Trabalho" (new tasks will go to Trabalho). From the **Hoje** (Today) and **Todas** (All) tabs, new tasks have no category.
+
+<Callout type="info">
+  Press `/` anywhere on the page to jump to the brain dump. The shortcut does nothing while you type in another field.
+</Callout>
+
+## Tabs and search
+
+The bar under the brain dump filters the board:
+
+| Tab | Shows |
+| --- | --- |
+| **Hoje** (Today) | Open tasks that are due today or overdue. The counter turns red when it is above zero. |
+| **Todas** (All) | Every task. |
+| One tab per category | Tasks in that category. |
+
+Each tab shows a task count. On small screens the tabs collapse into a dropdown.
+
+The **Buscar tarefas…** (Search tasks) box filters the current tab. It matches the title, the description and subtask titles. Case and accents are ignored.
+
+## Categories
+
+Categories group tasks into tabs.
+
+- **Create:** click **Categoria** (Category) at the end of the tabs. Enter a **Nome** (Name), pick a **Cor** (Color) and an **Ícone** (Icon), then click **Salvar** (Save).
+- **Edit or delete:** hover over a tab and click the pencil or the trash icon. When you delete a category, its tasks stay on the board without a category.
+- **Reorder:** drag a tab left or right.
+- **Move a task to a category:** drag a task card and drop it on a category tab.
+
+On small screens, use the dropdown: it has **Nova categoria** (New category) and, for the selected category, **Editar** (Edit) and **Apagar** (Delete).
+
+## The board
+
+The board has three columns: **A fazer** (To do), **Fazendo** (Doing) and **Feito** (Done). To change the status of a task, either:
+
+- drag the card to another column, or
+- use the arrow buttons on the card: **Mover para Fazendo** (Move to Doing), **Mover para Feito** (Move to Done) or back to **A fazer**.
+
+Moving a task to **Feito** records the completion date. The [dashboards](/docs/features/dashboards) use this date. Done tasks show a strikethrough title.
+
+On small screens, swipe left and right to switch columns. The dots under the board show the current column.
+
+## Task cards
+
+Each card shows the title and, when present, the due date badge and the subtask progress (for example `2/5`) with the first three subtasks. Hover over a card to reveal its controls:
+
+- **Star:** marks the task as a priority. Priority tasks go to the top of their column and get an amber left border.
+- **Prazo** (Due date): opens a picker with **Hoje** (Today), **Amanhã** (Tomorrow), **Próx. semana** (Next week) and a date field. Click the crossed-out calendar to remove the due date.
+- **Category menu:** moves the task to another category or to **Sem categoria** (No category).
+- **Pencil:** opens the task editor. Clicking anywhere else on the card does the same.
+- **Trash:** deletes the task.
+
+The due date badge changes with the time left:
+
+| Badge | Meaning |
+| --- | --- |
+| **atrasada 3d** | Overdue by 3 days (red) |
+| **hoje** | Due today |
+| **amanhã** | Due tomorrow |
+| **em 5d** | Due in 5 days (up to 7) |
+| **12/10** | Due later, shown as day/month |
+
+## Edit a task
+
+The **Editar tarefa** (Edit task) dialog has these fields:
+
+| Field | Meaning |
+| --- | --- |
+| **Título** | Title |
+| **Descrição** | Description |
+| **Prazo** | Due date |
+| **Categoria** | Category |
+| **Subtarefas** | Subtasks |
+| **Notas do vault** | Vault notes (only when the Brain module is on) |
+| **Agenda** | Calendar events for this task |
+
+Click **Salvar** (Save) to keep changes to the title, description, due date and category. Subtasks, note links and calendar events save immediately.
+
+### Subtasks
+
+Type in **Nova subtarefa** (New subtask) and press `Enter` or click **+**. Click the checkbox to mark a subtask done. Click the **X** to remove it.
+
+### Vault notes
+
+With the [Brain](/docs/features/brain) module on, click **Vincular** (Link), search for a note and pick it. The link appears as a chip. If the note was renamed or moved outside lifegui, the chip turns red and reads "(nota não encontrada)" (note not found). Remove it and link the note again.
+
+### Calendar
+
+With [Google Calendar](/docs/features/calendar) connected, click **Agendar** (Schedule) to put the task on your calendar:
+
+| Field | Meaning |
+| --- | --- |
+| **Título do evento** | Event title, prefilled with the task title |
+| **Data** | Date. Shows **A partir de** (Starting on) when the event repeats. |
+| **Hora** | Start time, 19:00 by default |
+| **Duração (min)** | Duration in minutes, 60 by default |
+| **Repetir semanalmente** | Repeat weekly. Pick the weekdays. |
+
+The event appears as a chip in the **Agenda** section. Click the **X** on the chip to remove it from the calendar. If the calendar is not connected, the button reads **Conectar calendário** (Connect calendar).
+
+## Delete a task
+
+Click the trash icon on a card. The card disappears and a toast shows **Desfazer** (Undo) for 5 seconds. After that, lifegui deletes the task for good.
+
+## Keyboard shortcuts
+
+| Shortcut | Action |
+| --- | --- |
+| `/` | Focus the brain dump |
+| `Ctrl+Enter` or `Cmd+Enter` | Process the brain dump |
+| `Enter` in **Nova subtarefa** | Add the subtask |
